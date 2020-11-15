@@ -41,3 +41,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Tilemap
+    uniqueID: 3798536137
+    locked: 0
+  - name: Background
+    uniqueID: 3099510703
+    locked: 0
+  - name: Objects
+    uniqueID: 3459715801
+    locked: 0
+  - name: Text
+    uniqueID: 3092502751
+    locked: 0
+  - name: Popup
+    uniqueID: 2186101687
+    locked: 0
