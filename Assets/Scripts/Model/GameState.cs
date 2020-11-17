@@ -11,7 +11,7 @@ public struct GameStateSnapshot
     public FacingDirection FrogFacingDirection;
     public ObstacleStruct[][] Obstacles;
     public FinishSpotData[] FinishSpotDatas;
-    public PlayerFrogActionEnum PlayerFrogActionEnum;
+    public PlayerFrogAction InputFrogAction;
     public float CurrentSameMoveDelay;
 }
 
@@ -39,7 +39,7 @@ public class GameState
     public RowData[] GroundRowDatas;
     public RowData[] RiverRowDatas;
     public FinishSpotData[] FinishSpotDatas;
-    public PlayerFrogActionEnum PlayerFrogActionEnum = PlayerFrogActionEnum.None;
+    public PlayerFrogAction InputFrogAction = PlayerFrogAction.None;
 
     private float _currentSameMoveDelay = 1f;
     private float _elapsedJumpingTime = 0f;
@@ -58,7 +58,7 @@ public class GameState
         snapshot.FrogPosition = FrogData.CurrentPosition;
         snapshot.FrogState = FrogData.State;
         snapshot.FrogFacingDirection = FrogData.FacingDirection;
-        snapshot.PlayerFrogActionEnum = PlayerFrogActionEnum;
+        snapshot.InputFrogAction = InputFrogAction;
         snapshot.CurrentSameMoveDelay = _currentSameMoveDelay;
         //snapshot.Obstacles;
         //snapshot.FinishSpotDatas;
@@ -87,17 +87,16 @@ public class GameState
         //MoveFrog toward player direction with speed specified in gameConfig and move pixel by ratio according to dt
         Vector2 inputVector2 = playerFrogAction.Move.ReadValue<Vector2>();
         //Debug.Log($"inputVector2: {inputVector2}");
-        PlayerFrogActionEnum = PlayerInputUtil.ConvertVector2ToPlayerFrogActionEnum(inputVector2);
-        Debug.Log($"CurrentPlayerFrogActionEnum: {PlayerFrogActionEnum}");
-        Debug.Log($"lastFrameSnapshot.PlayerFrogActionEnum: {lastFrameSnapshot.PlayerFrogActionEnum}");
-        //Debug.Log($"dt: {dt}");
+        InputFrogAction = PlayerInputUtil.ConvertVector2ToPlayerFrogActionEnum(inputVector2);
+        Debug.Log($"CurrentPlayerFrogActionEnum: {InputFrogAction}");
+        FacingDirection InputFrogActionDirection = PlayerInputUtil.ActionEnumToFacingDirection(InputFrogAction);
 
         switch (FrogData.State)
         {
             case FrogState.Idle:
-                if(PlayerFrogActionEnum != PlayerFrogActionEnum.None)
+                if (InputFrogAction != PlayerFrogAction.None)
                 {
-                    if(PlayerFrogActionEnum == lastFrameSnapshot.PlayerFrogActionEnum && FrogData.FacingDirection == PlayerInputUtil.ActionEnumToFacingDirection(PlayerFrogActionEnum))
+                    if(InputFrogAction == lastFrameSnapshot.InputFrogAction && FrogData.FacingDirection == InputFrogActionDirection)
                     {
                         if(_currentSameMoveDelay > 0)
                         {
@@ -106,7 +105,7 @@ public class GameState
                         }
                         else
                         {
-                            FrogData.FacingDirection = PlayerInputUtil.ActionEnumToFacingDirection(PlayerFrogActionEnum);
+                            FrogData.FacingDirection = InputFrogActionDirection;
                             _startPosition = FrogData.CurrentPosition;
                             _targetPosition = _startPosition + (PlayerInputUtil.GetNormalizedVector2FromFacingDirection(FrogData.FacingDirection) * gameConfig.FROG_JUMP_DISTANCE);
                             FrogData.State = FrogState.Jumping;
@@ -115,7 +114,7 @@ public class GameState
                     else
                     {
                         _currentSameMoveDelay = gameConfig.SAME_MOVE_DELAY;
-                        FrogData.FacingDirection = PlayerInputUtil.ActionEnumToFacingDirection(PlayerFrogActionEnum);
+                        FrogData.FacingDirection = InputFrogActionDirection;
                         _startPosition = FrogData.CurrentPosition;
                         _targetPosition = _startPosition + (PlayerInputUtil.GetNormalizedVector2FromFacingDirection(FrogData.FacingDirection) * gameConfig.FROG_JUMP_DISTANCE);
                         FrogData.State = FrogState.Jumping;

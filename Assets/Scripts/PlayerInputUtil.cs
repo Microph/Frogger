@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerInputUtil
 {
-    public enum PlayerFrogActionEnum
+    public enum PlayerFrogAction
     {
         None,
         MoveUp,
@@ -14,38 +14,38 @@ public class PlayerInputUtil
         MoveRight
     }
 
-    public static PlayerFrogActionEnum ConvertVector2ToPlayerFrogActionEnum(Vector2 v)
+    public static PlayerFrogAction ConvertVector2ToPlayerFrogActionEnum(Vector2 v)
     {
         if (v.y > 0)
         {
-            return PlayerFrogActionEnum.MoveUp;
+            return PlayerFrogAction.MoveUp;
         }
         else if(v.y < 0)
         {
-            return PlayerFrogActionEnum.MoveDown;
+            return PlayerFrogAction.MoveDown;
         }
         else if(v.x < 0)
         {
-            return PlayerFrogActionEnum.MoveLeft;
+            return PlayerFrogAction.MoveLeft;
         }
         else if(v.x > 0)
         {
-            return PlayerFrogActionEnum.MoveRight;
+            return PlayerFrogAction.MoveRight;
         }
         else
         {
-            return PlayerFrogActionEnum.None;
+            return PlayerFrogAction.None;
         }
     }
 
-    public static FacingDirection ActionEnumToFacingDirection(PlayerFrogActionEnum playerFrogActionEnum)
+    public static FacingDirection ActionEnumToFacingDirection(PlayerFrogAction playerFrogActionEnum)
     {
         switch (playerFrogActionEnum)
         {
-            case PlayerFrogActionEnum.MoveUp: return FacingDirection.Up;
-            case PlayerFrogActionEnum.MoveDown: return FacingDirection.Down;
-            case PlayerFrogActionEnum.MoveLeft: return FacingDirection.Left;
-            case PlayerFrogActionEnum.MoveRight: return FacingDirection.Right;
+            case PlayerFrogAction.MoveUp: return FacingDirection.Up;
+            case PlayerFrogAction.MoveDown: return FacingDirection.Down;
+            case PlayerFrogAction.MoveLeft: return FacingDirection.Left;
+            case PlayerFrogAction.MoveRight: return FacingDirection.Right;
             default: return FacingDirection.Up;
         }
     }

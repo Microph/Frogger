@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour
         float dt = Time.deltaTime;
         GameStateSnapshot nextSnapShot = GameState.UpdateToNextFrame(LastFrameSnapshot, dt, _gameConfig, _playerInput.PlayerFrog);
         LastFrameSnapshot = CurrentFrameSnapshot;
-        Debug.Log("LastFrameSnapshot.PlayerFrogActionEnum: " + LastFrameSnapshot.PlayerFrogActionEnum);
+        Debug.Log("LastFrameSnapshot.PlayerFrogActionEnum: " + LastFrameSnapshot.InputFrogAction);
         CurrentFrameSnapshot = nextSnapShot;
     }
 }
