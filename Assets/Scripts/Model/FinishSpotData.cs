@@ -1,4 +1,4 @@
-﻿public class FinishSpotData
+﻿public struct FinishSpotData
 {
-    public bool IsOccupied = false;
+    public bool IsOccupied;
 }

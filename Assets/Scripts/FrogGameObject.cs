@@ -8,7 +8,7 @@ public class FrogGameObject : MonoBehaviour
 
     private void Start()
     {
-        _frogData = GameManager.Instance.GameState.CurrentFrogData;
+        _frogData = GameManager.Instance.GameState.FrogData;
     }
 
     private void Update()

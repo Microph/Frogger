@@ -8,8 +8,10 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
     public static GameManager Instance { get { return _instance; } }
-
+    
     public GameState GameState;
+    public GameStateSnapshot LastFrameSnapshot;
+    public GameStateSnapshot CurrentFrameSnapshot;
 
     private PlayerInput _playerInput;
     private GameConfig _gameConfig;
@@ -18,8 +20,10 @@ public class GameManager : MonoBehaviour
     {
         _instance = this;
         _playerInput = new PlayerInput();
-        GameState = new GameState();
         _gameConfig = new GameConfig();
+        GameState = new GameState();
+        LastFrameSnapshot = GameState.GetSnapshot();
+        CurrentFrameSnapshot = LastFrameSnapshot;
 
 #if UNITY_IOS || UNITY_ANDROID
         //mobileInputs.SetActive(true);
@@ -57,16 +61,10 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         //main game loop
-        //update GameState with methods
         float dt = Time.deltaTime;
-        GameState.MoveFrog(dt, _gameConfig, _playerInput.PlayerFrog);
-        //_gameState.UpdateObstacle(dt, _gameConfig);
-        /*
-        _gameState.CreateObstacle(dt, _gameConfig);
-        _gameState.MoveObstacle(dt, _gameConfig);
-        _gameState.RemoveObstacle(dt, _gameConfig);
-        */
-        //_gameState.UpdateFrogStatus(dt, _gameConfig);
-        //_gameState.UpdateGameStatus(dt, _gameConfig);
+        GameStateSnapshot nextSnapShot = GameState.UpdateToNextFrame(LastFrameSnapshot, dt, _gameConfig, _playerInput.PlayerFrog);
+        LastFrameSnapshot = CurrentFrameSnapshot;
+        Debug.Log("LastFrameSnapshot.PlayerFrogActionEnum: " + LastFrameSnapshot.PlayerFrogActionEnum);
+        CurrentFrameSnapshot = nextSnapShot;
     }
 }

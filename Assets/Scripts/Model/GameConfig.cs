@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class GameConfig
 {
-    public float FrogMoveUnitPerSec = 2;
-    public float FinishLinePoints = 100;
-    public float SomeConfig = 100;
+    public float FROG_JUMP_DISTANCE = 1;
+    public float FROG_JUMP_TIME = 0.25f;
+    public float SAME_MOVE_DELAY = 0.25f;
 
     public GameConfig()
     {

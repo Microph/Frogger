@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class FrogData : MovableEntityData
 {
-    public CurrentStatus CurrentStatus;
+    public FrogState State;
 
-    public FrogData(MovableEntityData movableEntityData, CurrentStatus currentStatus) : base(movableEntityData)
+    public FrogData(MovableEntityData movableEntityData, FrogState currentStatus) : base(movableEntityData)
     {
-        CurrentStatus = currentStatus;
+        State = currentStatus;
     }
 }
 
-public enum CurrentStatus
+public enum FrogState
 {
     Idle,
     Jumping,
