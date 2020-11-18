@@ -2,18 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FrogGameObject : MonoBehaviour
+public class ObstacleGameObject : MonoBehaviour
 {
-    private FrogData _frogData; //ref from GameState
+    public MovableEntityData MovableEntityData; //Gamestate modify
 
     private void Start()
     {
-       _frogData = GameManager.Instance.GameState.FrogData;
     }
 
     private void Update()
     {
-        transform.position = _frogData.CurrentPosition;
+        transform.position = MovableEntityData.CurrentPosition;
     }
 
     private void OnTriggerEnter2D(Collider2D other)

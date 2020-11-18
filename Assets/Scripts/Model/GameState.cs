@@ -36,8 +36,7 @@ public enum ObstacleType
 public class GameState
 {
     public FrogData FrogData;
-    public RowData[] GroundRowDatas;
-    public RowData[] RiverRowDatas;
+    public List<RowData> RowDatas;
     public FinishSpotData[] FinishSpotDatas;
     public PlayerFrogAction InputFrogAction = PlayerFrogAction.None;
 
@@ -47,9 +46,21 @@ public class GameState
     private Vector2 _targetPosition;
 
     //for quick debug
-    public GameState()
+    public GameState(GameConfig gameConfig)
     {
         FrogData = new FrogData(new MovableEntityData(new Vector2(0.5f, -7.5f), null, FacingDirection.Up), FrogState.Idle);
+        RowDatas = GetRowDatasFromConfig(gameConfig.RowDataConfigs);
+    }
+
+    private List<RowData> GetRowDatasFromConfig(RowDataConfig[] rowDataConfigs)
+    {
+        List<RowData> rowDataList = new List<RowData>();
+        foreach(RowDataConfig rowDataConfig in rowDataConfigs)
+        {
+            rowDataList.Add(new RowData(rowDataConfig));
+        }
+
+        return rowDataList;
     }
 
     public GameStateSnapshot GetSnapshot()
@@ -69,14 +80,7 @@ public class GameState
     public GameStateSnapshot UpdateToNextFrame(GameStateSnapshot lastFrameGameStateSnapshot, float dt, GameConfig gameConfig, PlayerInput.PlayerFrogActions currentFramePlayerFrogAction)
     {
         ApplyActionToFrog(lastFrameGameStateSnapshot, dt, gameConfig, currentFramePlayerFrogAction);
-        //More
-        //GameState.ApplyActionToFrog(dt, _gameConfig, _playerInput.PlayerFrog);
-        //_gameState.UpdateObstacle(dt, _gameConfig);
-        /*
-        _gameState.CreateObstacle(dt, _gameConfig);
-        _gameState.MoveObstacle(dt, _gameConfig);
-        _gameState.RemoveObstacle(dt, _gameConfig);
-        */
+        UpdateObstacle(dt, gameConfig);
         //_gameState.UpdateFrogStatus(dt, _gameConfig);
         //_gameState.UpdateGameStatus(dt, _gameConfig);
         return GetSnapshot();
@@ -88,7 +92,7 @@ public class GameState
         Vector2 inputVector2 = playerFrogAction.Move.ReadValue<Vector2>();
         //Debug.Log($"inputVector2: {inputVector2}");
         InputFrogAction = PlayerInputUtil.ConvertVector2ToPlayerFrogActionEnum(inputVector2);
-        Debug.Log($"CurrentPlayerFrogActionEnum: {InputFrogAction}");
+        //Debug.Log($"CurrentPlayerFrogActionEnum: {InputFrogAction}");
         FacingDirection InputFrogActionDirection = PlayerInputUtil.ActionEnumToFacingDirection(InputFrogAction);
 
         switch (FrogData.State)
@@ -100,7 +104,7 @@ public class GameState
                     {
                         if(_currentSameMoveDelay > 0)
                         {
-                            Debug.Log("SAME MOVE DELAY");
+                            //Debug.Log("SAME MOVE DELAY");
                             _currentSameMoveDelay -= dt;
                         }
                         else
@@ -130,7 +134,9 @@ public class GameState
                 float lerpAmount = _elapsedJumpingTime / gameConfig.FROG_JUMP_TIME;
                 if (lerpAmount < 1)
                 {
+                    //TODO: Check hitting corner first
                     FrogData.CurrentPosition = Vector2.Lerp(_startPosition, _targetPosition, _elapsedJumpingTime / gameConfig.FROG_JUMP_TIME);
+                    //TODO: check falling into water / hit obstacle
                 }
                 else
                 {
@@ -145,6 +151,60 @@ public class GameState
             case FrogState.InFinishLine:
                 break;
             default: break;
+        }
+    }
+
+    private void UpdateObstacle(float dt, GameConfig _gameConfig)
+    {
+       for(int i = 0; i < RowDatas.Count; i++)
+        {
+            RowData rowData = RowDatas[i];
+            if (rowData.RowMovingDirection == RowMovingDirection.Left)
+            {
+                //move obstacle that fully left view back to pool 
+                //no need ^ for now cuz it will eventually be back when obj pool call
+
+                //ex. left -> check if right most (last obsbtacle in list) have gap to the right that is at least minGap in _gameConfig -> spawn new obstacle from pool
+                float lastObstacleX = rowData.MovableEntityDataList.Count == 0 ? 7.5f : rowData.MovableEntityDataList[rowData.MovableEntityDataList.Count - 1].CurrentPosition.x * rowData.MovableEntityDataList[rowData.MovableEntityDataList.Count - 1].Width;
+                if(rowData.MovableEntityDataList.Count == 0 || 7.5f - lastObstacleX >= _gameConfig.RowDataConfigs[i].MinGap)
+                {
+                    Vector2 spawnPos = new Vector2(7.5f + UnityEngine.Random.Range(_gameConfig.RowDataConfigs[i].MinGap, _gameConfig.RowDataConfigs[i].MaxGap), i - 6.5f);
+                    GameObject a = ObjectPooler.Instance.SpawnFromPool(_gameConfig.RowDataConfigs[i].ObstacleType.ToString(), spawnPos);
+                    ObstacleGameObject obstacleGameObject = a.GetComponent<ObstacleGameObject>();
+                    obstacleGameObject.MovableEntityData = new MovableEntityData();
+                    obstacleGameObject.MovableEntityData.CurrentPosition = spawnPos;
+                    //SpriteRenderer = ?
+                    obstacleGameObject.MovableEntityData.FacingDirection = FacingDirection.Left;
+                    obstacleGameObject.MovableEntityData.Width = 1;
+                    rowData.MovableEntityDataList.Add(obstacleGameObject.MovableEntityData);
+                }
+            }
+            else
+            {
+                //TODO
+            }
+        }
+        //move everything
+        for (int i = 0; i < RowDatas.Count; i++)
+        {
+            RowData rowData = RowDatas[i];
+            if (rowData.RowMovingDirection == RowMovingDirection.Left)
+            {
+                foreach(MovableEntityData obstacleEntityData in rowData.MovableEntityDataList)
+                {
+                    //currentX - dt * MoveSpeed (MoveSpeed is X block per sec)
+                    obstacleEntityData.CurrentPosition -= new Vector2(dt * _gameConfig.RowDataConfigs[i].RowMovingSpeed.GetHashCode(), 0);
+                }
+            }
+            else
+            {
+                foreach (MovableEntityData obstacleEntityData in rowData.MovableEntityDataList)
+                {
+                    //currentX - dt * MoveSpeed (MoveSpeed is X block per sec)
+                    obstacleEntityData.CurrentPosition += new Vector2(dt * _gameConfig.RowDataConfigs[i].RowMovingSpeed.GetHashCode(), 0);
+                }
+            }
+
         }
     }
 }

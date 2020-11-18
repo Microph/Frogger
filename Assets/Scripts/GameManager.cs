@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
         _instance = this;
         _playerInput = new PlayerInput();
         _gameConfig = new GameConfig();
-        GameState = new GameState();
+        GameState = new GameState(_gameConfig);
         LastFrameSnapshot = GameState.GetSnapshot();
         CurrentFrameSnapshot = LastFrameSnapshot;
 
@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour
         float dt = Time.deltaTime;
         GameStateSnapshot nextSnapShot = GameState.UpdateToNextFrame(LastFrameSnapshot, dt, _gameConfig, _playerInput.PlayerFrog);
         LastFrameSnapshot = CurrentFrameSnapshot;
-        Debug.Log("LastFrameSnapshot.PlayerFrogActionEnum: " + LastFrameSnapshot.InputFrogAction);
+        //Debug.Log("LastFrameSnapshot.PlayerFrogActionEnum: " + LastFrameSnapshot.InputFrogAction);
         CurrentFrameSnapshot = nextSnapShot;
     }
 }
