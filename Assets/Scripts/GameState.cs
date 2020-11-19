@@ -40,7 +40,6 @@ public class GameState : MonoBehaviour
         _inputFrogAction = PlayerInputUtil.ConvertVector2ToPlayerFrogActionEnum(inputVector2);
         FrogGameObject.FrameUpdate(_inputFrogAction, lastFrameGameStateSnapshot, dt, gameConfig);
         ObstacleManager.FrameUpdate(dt, gameConfig);
-        //_gameState.UpdateFrogStatus(dt, _gameConfig);
         //_gameState.UpdateGameStatus(dt, _gameConfig);
         return GetSnapshot();
     }

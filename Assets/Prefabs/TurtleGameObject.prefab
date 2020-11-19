@@ -60,7 +60,7 @@ GameObject:
   - component: {fileID: 5136747391705435357}
   m_Layer: 0
   m_Name: Component_0
-  m_TagString: Car
+  m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -189,7 +189,7 @@ GameObject:
   - component: {fileID: 1300093334692697393}
   m_Layer: 0
   m_Name: Component_2
-  m_TagString: Car
+  m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -318,7 +318,7 @@ GameObject:
   - component: {fileID: 11916387896121131}
   m_Layer: 0
   m_Name: Component_1
-  m_TagString: Car
+  m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

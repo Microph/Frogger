@@ -58,10 +58,10 @@ public class GameManager : MonoBehaviour
         //initize stuffs
     }
 
-    void Update()
+    void FixedUpdate()
     {
         //main game loop
-        float dt = Time.deltaTime;
+        float dt = Time.fixedDeltaTime;
         GameStateSnapshot nextSnapShot = GameState.UpdateToNextFrame(LastFrameSnapshot, dt, _gameConfig, _playerInput.PlayerFrog);
         LastFrameSnapshot = CurrentFrameSnapshot;
         //Debug.Log("LastFrameSnapshot.PlayerFrogActionEnum: " + LastFrameSnapshot.InputFrogAction);

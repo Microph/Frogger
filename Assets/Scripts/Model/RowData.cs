@@ -3,13 +3,13 @@
 public class RowData
 {
     public RowMovingDirection RowMovingDirection;
-    public RowMovingSpeed RowMovingSpeed;
+    public float RowMovingUnitPerSec;
     public List<MovableEntityData> MovableEntityDataList;
 
     public RowData(RowDataConfig rowDataConfig)
     {
         RowMovingDirection = rowDataConfig.RowMovingDirection;
-        RowMovingSpeed = rowDataConfig.RowMovingSpeed;
+        RowMovingUnitPerSec = rowDataConfig.RowMovingUnitPerSec;
         MovableEntityDataList = new List<MovableEntityData>();
         //foreach(float initialXPosition in rowDataConfig.InitialObstacleXPositions)
         //{
@@ -22,11 +22,4 @@ public enum RowMovingDirection
 {
     Right,
     Left
-}
-
-public enum RowMovingSpeed
-{
-    Slow = 1,
-    Medium = 2,
-    Fast = 3
 }

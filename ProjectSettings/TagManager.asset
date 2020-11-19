@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Frog
   - Car
+  - Platform
   layers:
   - Default
   - TransparentFX

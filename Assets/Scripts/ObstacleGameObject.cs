@@ -4,19 +4,11 @@ using UnityEngine;
 
 public class ObstacleGameObject : MonoBehaviour
 {
-    public MovableEntityData MovableEntityData; //Gamestate modify
-
-    private void Start()
-    {
-    }
+    public MovableEntityData MovableEntityData; //Assigned by GameState
+    public int RowIndex = -1;
 
     private void Update()
     {
         transform.position = MovableEntityData.CurrentPosition;
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        Debug.Log("collide with tag: " + other.tag);
     }
 }

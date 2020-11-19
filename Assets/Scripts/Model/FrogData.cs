@@ -20,7 +20,9 @@ public class FrogData : MovableEntityData
     public float _elapsedJumpingTime = 0f;
     public Vector2 _startPosition;
     public Vector2 _targetPosition;
-    public bool _isOnPlatform = false;
+
+    private bool _isOnPlatform = false;
+    private int _platformRowIndex = -1;
 
     public FrogData(MovableEntityData movableEntityData) : base(movableEntityData)
     {
@@ -28,7 +30,14 @@ public class FrogData : MovableEntityData
 
     public bool IsDrown()
     {
-        return CurrentPosition.y >= -0.5f && !_isOnPlatform;
+        bool isDrown = CurrentPosition.y >= -0.5f && State != FrogState.Jumping && !_isOnPlatform;
+        Debug.Log("isDrown:" + isDrown);
+        return isDrown;
+    }
+
+    public bool IsOnGround()
+    {
+        return CurrentPosition.y < -0.5f;
     }
 
     public void UpdateFrogDataTriggerEnter2D(Collider2D other)
@@ -39,11 +48,19 @@ public class FrogData : MovableEntityData
         }
         else if (other.tag.Equals("Platform"))
         {
+            _platformRowIndex = other.GetComponentInParent<ObstacleGameObject>().RowIndex;
+        }
+    }
+
+    public void UpdateFrogDataTriggerOnStay2D(Collider2D other)
+    {
+        if (State == FrogState.Idle && other.tag.Equals("Platform"))
+        {
             _isOnPlatform = true;
         }
     }
 
-    public void UpdateFrogDataTriggerExit2D(Collider2D other)
+    public void UpdateFrogDataTriggerOnExit2D(Collider2D other)
     {
         if (other.tag.Equals("Platform"))
         {
@@ -58,11 +75,15 @@ public class FrogData : MovableEntityData
         switch (State)
         {
             case FrogState.Idle:
-                //Check if on water
                 if(IsDrown())
                 {
                     State = FrogState.Die;
                     return;
+                }
+
+                if(_isOnPlatform)
+                {
+                    CurrentPosition = MoveWithPlatform(CurrentPosition, gameConfig, _platformRowIndex, dt);
                 }
 
                 _currentMoveCoolDown -= _currentMoveCoolDown > 0 ? dt : 0;
@@ -100,15 +121,18 @@ public class FrogData : MovableEntityData
                 float lerpAmount = _elapsedJumpingTime / gameConfig.FROG_JUMP_TIME;
                 if (lerpAmount < 1)
                 {
-                    //TODO: Check hitting corner first
                     CurrentPosition = Vector2.Lerp(_startPosition, _targetPosition, _elapsedJumpingTime / gameConfig.FROG_JUMP_TIME);
-                    //TODO: check falling into water / hit obstacle
                 }
                 else
                 {
                     CurrentPosition = _targetPosition;
                     _elapsedJumpingTime = 0;
                     State = FrogState.Idle;
+                }
+
+                if (IsOnGround())
+                {
+                    CurrentPosition.x = Mathf.Clamp(CurrentPosition.x, -6.5f, 6.5f);
                 }
                 //Debug.Log($"CurrentPosition: {CurrentPosition}");
                 break;
@@ -118,5 +142,25 @@ public class FrogData : MovableEntityData
                 break;
             default: break;
         }
+    }
+
+    private Vector2 MoveWithPlatform(Vector2 currentPosition, GameConfig gameConfig, int rowIndex, float dt)
+    {
+        if (rowIndex == -1)
+        {
+            return currentPosition;
+        }
+
+        float unitPerSec = gameConfig.RowDataConfigs[rowIndex].RowMovingUnitPerSec;
+        RowMovingDirection rowMovingDirection = gameConfig.RowDataConfigs[rowIndex].RowMovingDirection;
+        if (rowMovingDirection == RowMovingDirection.Right)
+        {
+            return new Vector2(currentPosition.x + (unitPerSec * dt), currentPosition.y);
+        }
+        else
+        {
+            return new Vector2(currentPosition.x - (unitPerSec * dt), currentPosition.y);
+        }
+        
     }
 }

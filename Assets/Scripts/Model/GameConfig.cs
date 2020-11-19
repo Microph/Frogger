@@ -10,33 +10,46 @@ public class GameConfig
     public float MOVE_COOLDOWN = 0.05f;
     public RowDataConfig[] RowDataConfigs;
 
+    //MOCK
     public GameConfig()
     {
-        RowDataConfigs = new RowDataConfig[1];
-        RowDataConfigs[0] = new RowDataConfig();
+        RowDataConfigs = new RowDataConfig[11];
+        RowDataConfigs[0] = new RowDataConfig(ObstacleType.None);
+        RowDataConfigs[1] = new RowDataConfig(ObstacleType.None);
+        RowDataConfigs[2] = new RowDataConfig(ObstacleType.None);
+        RowDataConfigs[3] = new RowDataConfig(ObstacleType.None);
+        RowDataConfigs[4] = new RowDataConfig(ObstacleType.None);
+        RowDataConfigs[5] = new RowDataConfig(ObstacleType.None); //should be empty
+        RowDataConfigs[6] = new RowDataConfig(ObstacleType.Turtle);
+        RowDataConfigs[7] = new RowDataConfig(ObstacleType.Turtle);
+        RowDataConfigs[8] = new RowDataConfig(ObstacleType.Turtle);
+        RowDataConfigs[9] = new RowDataConfig(ObstacleType.Turtle);
+        RowDataConfigs[10] = new RowDataConfig(ObstacleType.Turtle);
+
+        //RowDataConfigs = new RowDataConfig[1];
+        //RowDataConfigs[0] = new RowDataConfig();
     }
 }
 
 public class RowDataConfig
 {
-    public ObstacleType ObstacleType;
+    public ObstacleType ObstacleType; //will be list for random
     public float[] InitialObstacleXPositions;
     public RowMovingDirection RowMovingDirection;
-    public RowMovingSpeed RowMovingSpeed;
+    public float RowMovingUnitPerSec;
     public int MinGap, MaxGap;
 
-    public RowDataConfig() //mock
+    public RowDataConfig(ObstacleType obstacleType) //mock
     {
-        ObstacleType = ObstacleType.CarRed;
+        ObstacleType = obstacleType;
         InitialObstacleXPositions = new float[3];
         //InitialObstacleXPositions[0] = 0.5f;
         //InitialObstacleXPositions[1] = 1.5f;
         //InitialObstacleXPositions[2] = 3.5f;
         RowMovingDirection = RowMovingDirection.Left;
-        RowMovingSpeed = RowMovingSpeed.Fast;
+        RowMovingUnitPerSec = 2;
         MinGap = 2;
         MaxGap = 4;
     }
 
-    
 }
