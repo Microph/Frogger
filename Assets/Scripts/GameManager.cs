@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
         _instance = this;
         _playerInput = new PlayerInput();
         _gameConfig = new GameConfig();
-        GameState = new GameState(_gameConfig);
+        GameState.Initialize(_gameConfig);
         LastFrameSnapshot = GameState.GetSnapshot();
         CurrentFrameSnapshot = LastFrameSnapshot;
 
