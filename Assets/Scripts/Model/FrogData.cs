@@ -15,7 +15,8 @@ public enum FrogState
 public class FrogData : MovableEntityData
 {
     public FrogState State;
-    public float _currentSameMoveDelay = 1f;
+    public float _currentMoveCoolDown = 0.1f;
+    public float _currentSameMovePenaltyTime = 0.15f;
     public float _elapsedJumpingTime = 0f;
     public Vector2 _startPosition;
     public Vector2 _targetPosition;
@@ -64,35 +65,34 @@ public class FrogData : MovableEntityData
                     return;
                 }
 
+                _currentMoveCoolDown -= _currentMoveCoolDown > 0 ? dt : 0;
                 if (inputFrogAction != PlayerFrogAction.None)
                 {
-                    if (inputFrogAction == lastFrameSnapshot.InputFrogAction && FacingDirection == InputFrogActionDirection)
+                    if (_currentMoveCoolDown > 0)
                     {
-                        if (_currentSameMoveDelay > 0)
+                        //Debug.Log("MOVE COOLDOWN");
+                        return;
+                    }
+                    
+                    if (inputFrogAction == lastFrameSnapshot.InputFrogAction && FacingDirection == InputFrogActionDirection)
+                    { 
+                        if (_currentSameMovePenaltyTime > 0)
                         {
-                            //Debug.Log("SAME MOVE DELAY");
-                            _currentSameMoveDelay -= dt;
-                        }
-                        else
-                        {
-                            FacingDirection = InputFrogActionDirection;
-                            _startPosition = CurrentPosition;
-                            _targetPosition = _startPosition + (PlayerInputUtil.GetNormalizedVector2FromFacingDirection(FacingDirection) * gameConfig.FROG_JUMP_DISTANCE);
-                            State = FrogState.Jumping;
+                            //Debug.Log("SAME MOVE PENALTY");
+                            _currentSameMovePenaltyTime -= _currentSameMovePenaltyTime > 0 ? dt : 0;
+                            return;
                         }
                     }
                     else
                     {
-                        _currentSameMoveDelay = gameConfig.SAME_MOVE_DELAY;
-                        FacingDirection = InputFrogActionDirection;
-                        _startPosition = CurrentPosition;
-                        _targetPosition = _startPosition + (PlayerInputUtil.GetNormalizedVector2FromFacingDirection(FacingDirection) * gameConfig.FROG_JUMP_DISTANCE);
-                        State = FrogState.Jumping;
+                        _currentSameMovePenaltyTime = gameConfig.SAME_MOVE_PENALTY_TIME;
                     }
-                }
-                else
-                {
-                    _currentSameMoveDelay = gameConfig.SAME_MOVE_DELAY;
+
+                    FacingDirection = InputFrogActionDirection;
+                    _startPosition = CurrentPosition;
+                    _targetPosition = _startPosition + (PlayerInputUtil.GetNormalizedVector2FromFacingDirection(FacingDirection) * gameConfig.FROG_JUMP_DISTANCE);
+                    _currentMoveCoolDown = gameConfig.MOVE_COOLDOWN;
+                    State = FrogState.Jumping;
                 }
                 break;
             case FrogState.Jumping:

@@ -6,7 +6,8 @@ public class GameConfig
 {
     public float FROG_JUMP_DISTANCE = 1;
     public float FROG_JUMP_TIME = 0.25f;
-    public float SAME_MOVE_DELAY = 0.25f;
+    public float SAME_MOVE_PENALTY_TIME = 0.15f;
+    public float MOVE_COOLDOWN = 0.05f;
     public RowDataConfig[] RowDataConfigs;
 
     public GameConfig()
@@ -36,4 +37,6 @@ public class RowDataConfig
         MinGap = 2;
         MaxGap = 4;
     }
+
+    
 }

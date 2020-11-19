@@ -14,7 +14,11 @@ public class FrogGameObject : MonoBehaviour
         FrogData.UpdateFrogData(inputFrogAction, lastFrameSnapshot, dt, gameConfig);
         transform.position = FrogData.CurrentPosition;
         FrogAnimator.SetBool("Jumping", FrogData.State == FrogState.Jumping);
-        if(FrogData.State == FrogState.Die)
+        if(FrogData.State == FrogState.Jumping)
+        {
+            FrogAnimator.SetBool("Jumping", true);
+        }
+        else if(FrogData.State == FrogState.Die)
         {
             if(FrogData.IsDrown())
             {
