@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static PlayerInputUtil;
@@ -13,14 +14,40 @@ public enum FrogState
 
 public class FrogData : MovableEntityData
 {
+    public FrogState State;
     public float _currentSameMoveDelay = 1f;
     public float _elapsedJumpingTime = 0f;
     public Vector2 _startPosition;
     public Vector2 _targetPosition;
-    public FrogState State;
+    public bool _isOnPlatform = false;
 
     public FrogData(MovableEntityData movableEntityData) : base(movableEntityData)
     {
+    }
+
+    public bool IsDrown()
+    {
+        return CurrentPosition.y >= -0.5f && !_isOnPlatform;
+    }
+
+    public void UpdateFrogDataTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag.Equals("Car"))
+        {
+            State = FrogState.Die;
+        }
+        else if (other.tag.Equals("Platform"))
+        {
+            _isOnPlatform = true;
+        }
+    }
+
+    public void UpdateFrogDataTriggerExit2D(Collider2D other)
+    {
+        if (other.tag.Equals("Platform"))
+        {
+            _isOnPlatform = false;
+        }
     }
 
     public void UpdateFrogData(PlayerFrogAction inputFrogAction, GameStateSnapshot lastFrameSnapshot, float dt, GameConfig gameConfig)
@@ -30,6 +57,13 @@ public class FrogData : MovableEntityData
         switch (State)
         {
             case FrogState.Idle:
+                //Check if on water
+                if(IsDrown())
+                {
+                    State = FrogState.Die;
+                    return;
+                }
+
                 if (inputFrogAction != PlayerFrogAction.None)
                 {
                     if (inputFrogAction == lastFrameSnapshot.InputFrogAction && FacingDirection == InputFrogActionDirection)
