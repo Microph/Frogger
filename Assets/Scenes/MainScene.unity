@@ -1500,11 +1500,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'Click check box to toggle on/off "SUPER HOT" mode.
-
-
-    Press any arrow
-    keys to start.
+  m_Text: 'Press any arrow keys to start.
 
     (change game configs at Scriptables/Config0)'
 --- !u!222 &409583395
@@ -6026,7 +6022,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &986837594
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6142,7 +6138,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -36.4, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1061161990
@@ -6171,7 +6167,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 6
     m_MaxSize: 52
-    m_Alignment: 3
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 1
@@ -7362,7 +7358,7 @@ PrefabInstance:
     - target: {fileID: 3057353859092530589, guid: e2ac8828cfea9804faf8b62fc8ad6e08,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 44.327583
+      value: 44.327637
       objectReference: {fileID: 0}
     - target: {fileID: 3057353859092530589, guid: e2ac8828cfea9804faf8b62fc8ad6e08,
         type: 3}
@@ -8223,7 +8219,7 @@ PrefabInstance:
     - target: {fileID: 3057353859092530589, guid: e2ac8828cfea9804faf8b62fc8ad6e08,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 56.992607
+      value: 56.992554
       objectReference: {fileID: 0}
     - target: {fileID: 3057353859092530589, guid: e2ac8828cfea9804faf8b62fc8ad6e08,
         type: 3}
@@ -8491,7 +8487,7 @@ PrefabInstance:
     - target: {fileID: 3057353859092530589, guid: e2ac8828cfea9804faf8b62fc8ad6e08,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 31.66256
+      value: 31.662598
       objectReference: {fileID: 0}
     - target: {fileID: 3057353859092530589, guid: e2ac8828cfea9804faf8b62fc8ad6e08,
         type: 3}
@@ -9475,7 +9471,7 @@ PrefabInstance:
     - target: {fileID: 3057353859092530589, guid: e2ac8828cfea9804faf8b62fc8ad6e08,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 18.997536
+      value: 18.997559
       objectReference: {fileID: 0}
     - target: {fileID: 3057353859092530589, guid: e2ac8828cfea9804faf8b62fc8ad6e08,
         type: 3}

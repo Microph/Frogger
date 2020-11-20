@@ -85,11 +85,7 @@ public class GameState : MonoBehaviour
         {
             if (_inputFrogAction != PlayerFrogAction.None)
             {
-                if(!GameManager.Instance.UIManager.ToggleSuperHot.isOn)
-                {
-                    _isFirstTimeShow = false;
-                }
-
+                _isFirstTimeShow = false;
                 GameManager.Instance.UIManager.ShowTitle(false);
             }
             else
