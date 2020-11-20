@@ -10,8 +10,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get { return _instance; } }
     
     public GameState GameState;
-    public GameStateSnapshot LastFrameSnapshot;
-    public GameStateSnapshot CurrentFrameSnapshot;
+    public GameStateSnapshot LastTickSnapshot;
+    public GameStateSnapshot CurrentTickSnapshot;
 
     private PlayerInput _playerInput;
     private GameConfig _gameConfig;
@@ -22,8 +22,8 @@ public class GameManager : MonoBehaviour
         _playerInput = new PlayerInput();
         _gameConfig = new GameConfig();
         GameState.Initialize(_gameConfig);
-        LastFrameSnapshot = GameState.GetSnapshot();
-        CurrentFrameSnapshot = LastFrameSnapshot;
+        LastTickSnapshot = GameState.GetSnapshot();
+        CurrentTickSnapshot = LastTickSnapshot;
 
 #if UNITY_IOS || UNITY_ANDROID
         //mobileInputs.SetActive(true);
@@ -62,9 +62,8 @@ public class GameManager : MonoBehaviour
     {
         //main game loop
         float dt = Time.fixedDeltaTime;
-        GameStateSnapshot nextSnapShot = GameState.UpdateToNextFrame(LastFrameSnapshot, dt, _gameConfig, _playerInput.PlayerFrog);
-        LastFrameSnapshot = CurrentFrameSnapshot;
-        //Debug.Log("LastFrameSnapshot.PlayerFrogActionEnum: " + LastFrameSnapshot.InputFrogAction);
-        CurrentFrameSnapshot = nextSnapShot;
+        GameStateSnapshot nextSnapShot = GameState.UpdateToNextTick(LastTickSnapshot, dt, _gameConfig, _playerInput.PlayerFrog);
+        LastTickSnapshot = CurrentTickSnapshot;
+        CurrentTickSnapshot = nextSnapShot;
     }
 }

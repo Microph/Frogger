@@ -68,7 +68,7 @@ public class FrogData : MovableEntityData
         }
     }
 
-    public void UpdateFrogData(PlayerFrogAction inputFrogAction, GameStateSnapshot lastFrameSnapshot, float dt, GameConfig gameConfig)
+    public void UpdateFrogData(PlayerFrogAction inputFrogAction, GameStateSnapshot lastTickSnapshot, float dt, GameConfig gameConfig)
     {
         FacingDirection InputFrogActionDirection = PlayerInputUtil.ActionEnumToFacingDirection(inputFrogAction);
 
@@ -95,7 +95,7 @@ public class FrogData : MovableEntityData
                         return;
                     }
                     
-                    if (inputFrogAction == lastFrameSnapshot.InputFrogAction && FacingDirection == InputFrogActionDirection)
+                    if (inputFrogAction == lastTickSnapshot.InputFrogAction && FacingDirection == InputFrogActionDirection)
                     { 
                         if (_currentSameMovePenaltyTime > 0)
                         {

@@ -12,16 +12,15 @@ public struct GameStateSnapshot
 
 public class GameState : MonoBehaviour
 {
-    public FrogGameObject FrogGameObject;
+    public FrogManager FrogManager;
     public ObstacleManager ObstacleManager;
-    public FinishSpotData[] FinishSpotDatas;
+    public FinishSpotGameObject[] FinishSpots;
 
     private PlayerFrogAction _inputFrogAction = PlayerFrogAction.None;
     
-    //for quick debug
     public void Initialize(GameConfig gameConfig)
     {
-        FrogGameObject.FrogData = new FrogData(new MovableEntityData(new Vector2(0.5f, -7.5f), FacingDirection.Up));
+        FrogManager.Initialize(new FrogData(new MovableEntityData(new Vector2(0.5f, -7.5f), FacingDirection.Up)));
         ObstacleManager.Initialize(gameConfig);
     }
 
@@ -32,14 +31,14 @@ public class GameState : MonoBehaviour
         return snapshot;
     }
 
-    public GameStateSnapshot UpdateToNextFrame(GameStateSnapshot lastFrameGameStateSnapshot, float dt, GameConfig gameConfig, PlayerInput.PlayerFrogActions currentFramePlayerFrogAction)
+    public GameStateSnapshot UpdateToNextTick(GameStateSnapshot lastTickGameStateSnapshot, float dt, GameConfig gameConfig, PlayerInput.PlayerFrogActions currentTickPlayerFrogAction)
     {
         //MoveFrog toward player direction with speed specified in gameConfig and move pixel by ratio according to dt
-        Vector2 inputVector2 = currentFramePlayerFrogAction.Move.ReadValue<Vector2>();
+        Vector2 inputVector2 = currentTickPlayerFrogAction.Move.ReadValue<Vector2>();
         //Debug.Log($"inputVector2: {inputVector2}");
         _inputFrogAction = PlayerInputUtil.ConvertVector2ToPlayerFrogActionEnum(inputVector2);
-        FrogGameObject.FrameUpdate(_inputFrogAction, lastFrameGameStateSnapshot, dt, gameConfig);
-        ObstacleManager.FrameUpdate(dt, gameConfig);
+        FrogManager.TickUpdate(_inputFrogAction, lastTickGameStateSnapshot, dt, gameConfig);
+        ObstacleManager.TickUpdate(dt, gameConfig);
         //_gameState.UpdateGameStatus(dt, _gameConfig);
         return GetSnapshot();
     }

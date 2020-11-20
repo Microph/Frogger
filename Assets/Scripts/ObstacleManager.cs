@@ -27,7 +27,7 @@ public class ObstacleManager : MonoBehaviour
         }
     }
 
-    public void FrameUpdate(float dt, GameConfig _gameConfig)
+    public void TickUpdate(float dt, GameConfig _gameConfig)
     {
         for (int i = 0; i < RowDatas.Count; i++)
         {
@@ -54,7 +54,7 @@ public class ObstacleManager : MonoBehaviour
 
             foreach (ObstacleGameObject obstacleGameObject in rowData.ObstacleGameObjectList)
             {
-                obstacleGameObject.UpdateFrame(dt, _gameConfig);
+                obstacleGameObject.UpdateTick(dt, _gameConfig);
             }
         }
     }

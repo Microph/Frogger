@@ -53,9 +53,9 @@ public class TurtleGameObject : ObstacleGameObject
         }
     }
 
-    public override void UpdateFrame(float dt, GameConfig gameConfig)
+    public override void UpdateTick(float dt, GameConfig gameConfig)
     {
-        base.UpdateFrame(dt, gameConfig);
+        base.UpdateTick(dt, gameConfig);
 
         switch (_currentTurtleState)
         {

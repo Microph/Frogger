@@ -29,7 +29,7 @@ public class ObstacleGameObject : MonoBehaviour
         FlipChildrenSprites(MovableEntityData.FacingDirection);
     }
 
-    public virtual void UpdateFrame(float dt, GameConfig gameConfig)
+    public virtual void UpdateTick(float dt, GameConfig gameConfig)
     {
         Vector2 moveVector = new Vector2(dt * gameConfig.RowDataConfigs[RowIndex].RowMovingUnitPerSec, 0);
         if (gameConfig.RowDataConfigs[RowIndex].RowMovingDirection == RowMovingDirection.Right)

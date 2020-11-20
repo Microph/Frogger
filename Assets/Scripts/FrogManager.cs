@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static PlayerInputUtil;
 
-public class FrogGameObject : MonoBehaviour
+public class FrogManager : MonoBehaviour
 {
     public FrogData FrogData; //Assigned by GameState
     public Transform SpriteTransform;
@@ -12,14 +12,15 @@ public class FrogGameObject : MonoBehaviour
 
     private Transform _frogTransform;
 
-    private void Awake()
+    public void Initialize(FrogData frogData)
     {
+        FrogData = frogData; 
         _frogTransform = GetComponent<Transform>();
     }
 
-    public void FrameUpdate(PlayerFrogAction inputFrogAction, GameStateSnapshot lastFrameSnapshot, float dt, GameConfig gameConfig)
+    public void TickUpdate(PlayerFrogAction inputFrogAction, GameStateSnapshot lastTickSnapshot, float dt, GameConfig gameConfig)
     {
-        FrogData.UpdateFrogData(inputFrogAction, lastFrameSnapshot, dt, gameConfig);
+        FrogData.UpdateFrogData(inputFrogAction, lastTickSnapshot, dt, gameConfig);
         _frogTransform.position = FrogData.CurrentPosition;
         FrogAnimator.SetBool("Jumping", FrogData.State == FrogState.Jumping);
         if (FrogData.State == FrogState.Jumping)
@@ -60,19 +61,19 @@ public class FrogGameObject : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("collide with tag: " + other.tag);
+        //Debug.Log("collide with tag: " + other.tag);
         FrogData.UpdateFrogDataTriggerEnter2D(other);
     }
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        Debug.Log("stay with tag: " + other.tag);
+        //Debug.Log("stay with tag: " + other.tag);
         FrogData.UpdateFrogDataTriggerOnStay2D(other);
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        Debug.Log("exit tag: " + other.tag);
+        //Debug.Log("exit tag: " + other.tag);
         FrogData.UpdateFrogDataTriggerOnExit2D(other);
     }
 }
