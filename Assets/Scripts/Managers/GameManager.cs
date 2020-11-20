@@ -44,14 +44,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    void Update()
     {
-        //main game loop
-        float dt = Time.fixedDeltaTime;
+        //Main game loop
+        float dt = Time.deltaTime;
         GameStateSnapshot nextSnapShot = GameState.UpdateToNextTick(LastTickSnapshot, dt, _gameConfig, _playerInput.PlayerFrog);
         LastTickSnapshot = CurrentTickSnapshot;
         CurrentTickSnapshot = nextSnapShot;
-
         UIManager.UpdateUI(LastTickSnapshot);
     }
 }

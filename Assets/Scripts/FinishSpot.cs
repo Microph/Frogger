@@ -16,10 +16,8 @@ public class FinishSpot : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("hi");
         if (other.tag.Equals("Frog"))
         {
-            Debug.Log("Finish!");
             SpriteRenderer.enabled = true;
             BoxCollider2D.enabled = false;
             IsFinished = true;

@@ -53,12 +53,6 @@ public class FrogManager : MonoBehaviour
         {
             FrogAnimator.SetTrigger("GoInvisible");
         }
-        else if (FrogData.State == FrogState.WaitUpdateFinishLine || FrogData.State == FrogState.WaitUpdateDie )
-        {
-            FrogAnimator.SetTrigger("DoneWait");
-            FrogAnimator.SetBool("DrownDie", false);
-            FrogAnimator.SetBool("CollisionDie", false);
-        }
         else
         {
             FrogAnimator.SetBool("CollisionDie", false);
@@ -84,12 +78,6 @@ public class FrogManager : MonoBehaviour
     {
         //Debug.Log("collide with tag: " + other.tag);
         FrogData.UpdateFrogDataTriggerEnter2D(other);
-    }
-
-    private void OnTriggerStay2D(Collider2D other)
-    {
-        //Debug.Log("stay with tag: " + other.tag);
-        FrogData.UpdateFrogDataTriggerOnStay2D(other);
     }
 
     private void OnTriggerExit2D(Collider2D other)

@@ -15,5 +15,4 @@ MonoBehaviour:
   ObstacleType: 11
   RowMovingDirection: -1
   MinGap: 4
-  MaxGap: 4
-  _rowMovingSpeed: 2
+  MaxGap: 9

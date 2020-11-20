@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static PlayerInputUtil;
 
 public struct GameStateSnapshot
@@ -11,6 +12,7 @@ public struct GameStateSnapshot
     public int CurrentScore;
     public float TimeLimit;
     public float TimeLeft;
+    public int MaxHealth;
     public int CurrentHealth;
     public int CurrentRound;
 }
@@ -22,11 +24,13 @@ public class GameState : MonoBehaviour
     public FinishSpot[] FinishSpots;
     public int CurrentScore;
     public float TimeLimit, TimeLeft;
-    public int CurrentHealth;
+    public int MaxHealth, CurrentHealth;
     public int CurrentRound = 0;
 
     private PlayerFrogAction _inputFrogAction = PlayerFrogAction.None;
     private FrogState _frogState;
+    private bool _isFirstTimeShow = true;
+    private bool _isGameOver = false;
 
     public static float GetGameSpeedModifier(GameConfig gameConfig, int currentRound)
     {
@@ -41,6 +45,7 @@ public class GameState : MonoBehaviour
         snapshot.CurrentScore = CurrentScore;
         snapshot.TimeLimit = TimeLimit;
         snapshot.TimeLeft = TimeLeft;
+        snapshot.MaxHealth = MaxHealth;
         snapshot.CurrentHealth = CurrentHealth;
         snapshot.CurrentRound = CurrentRound;
         return snapshot;
@@ -50,7 +55,8 @@ public class GameState : MonoBehaviour
     {
         TimeLimit = gameConfig.GAME_TIME_LIMIT;
         TimeLeft = TimeLimit;
-        CurrentHealth = gameConfig.HEALTH;
+        MaxHealth = gameConfig.HEALTH;
+        CurrentHealth = MaxHealth;
         CurrentRound = 0;
         FrogManager.Initialize(new FrogData(new MovableEntityData(gameConfig.FROG_START_POINT, FacingDirection.Up)));
         ObstacleManager.Initialize(gameConfig, CurrentRound);
@@ -70,21 +76,48 @@ public class GameState : MonoBehaviour
 
     public GameStateSnapshot UpdateToNextTick(GameStateSnapshot lastTickGameStateSnapshot, float dt, GameConfig gameConfig, PlayerInput.PlayerFrogActions currentTickPlayerFrogAction)
     {
+        //Get player output
+        Vector2 inputVector2 = currentTickPlayerFrogAction.Move.ReadValue<Vector2>();
+        _inputFrogAction = PlayerInputUtil.ConvertVector2ToPlayerFrogActionEnum(inputVector2);
+
+        //First time button hit will close Title
+        if(_isFirstTimeShow)
+        {
+            if (_inputFrogAction != PlayerFrogAction.None)
+            {
+                GameManager.Instance.UIManager.ShowTitle(false);
+            }
+            else
+            {
+                return GetSnapshot();
+            }
+        }
+
+        //Game over screen receive button input to restart
+        if (_isGameOver)
+        {
+            if (_inputFrogAction != PlayerFrogAction.None)
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            }
+
+            return GetSnapshot();
+        }
+
+        //Update main timer in game
         TimeLeft -= dt;
         if (TimeLeft <= 0)
         {
             FrogManager.FrogData.State = FrogState.Die;
         }
 
-        ObstacleManager.TickUpdate(dt, gameConfig);
-        Vector2 inputVector2 = currentTickPlayerFrogAction.Move.ReadValue<Vector2>();
-        _inputFrogAction = PlayerInputUtil.ConvertVector2ToPlayerFrogActionEnum(inputVector2);
+        //Tick update frog
         _frogState = FrogManager.TickUpdate(_inputFrogAction, lastTickGameStateSnapshot, dt, gameConfig);
         if(lastTickGameStateSnapshot.FrogState == FrogState.Idle && _frogState == FrogState.Jumping)
         {
             if(_inputFrogAction == PlayerFrogAction.MoveUp)
             {
-                CurrentScore += 10;
+                CurrentScore += 5; //It somehows trigger twice, giving 10 points when move up anyway.
             }
         }
 
@@ -99,6 +132,8 @@ public class GameState : MonoBehaviour
             ProcessFinishLine(gameConfig);
         }
 
+        //Tick update obstacle
+        ObstacleManager.TickUpdate(dt, gameConfig);
         return GetSnapshot();
     }
 
@@ -118,9 +153,11 @@ public class GameState : MonoBehaviour
 
     private void ProcessDie(GameConfig gameConfig)
     {
-        if(CurrentHealth == 0)
+        CurrentHealth -= 1;
+        if (CurrentHealth == 0)
         {
-            GameManager.Instance.UIManager.ShowGameOver();
+            _isGameOver = true;
+            GameManager.Instance.UIManager.ShowGameOver(true);
         }
         else
         {

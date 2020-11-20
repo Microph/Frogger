@@ -24,7 +24,8 @@ public class FrogData : MovableEntityData
     public Vector2 _startPosition;
     public Vector2 _targetPosition;
 
-    private bool _isOnPlatform = false;
+    public bool IsOnPlatform { get => _isOnPlatformCounter > 0; }
+    private int _isOnPlatformCounter = 0;
     private int _platformRowIndex = -1;
 
     public FrogData(MovableEntityData movableEntityData) : base(movableEntityData)
@@ -33,8 +34,7 @@ public class FrogData : MovableEntityData
 
     public bool IsDrown()
     {
-        bool isDrown = CurrentPosition.y >= -0.5f && State != FrogState.Jumping && !_isOnPlatform;
-        //Debug.Log("isDrown:" + isDrown);
+        bool isDrown = CurrentPosition.y >= -0.5f && State != FrogState.Jumping && !IsOnPlatform;
         return isDrown;
     }
 
@@ -47,43 +47,35 @@ public class FrogData : MovableEntityData
     {
         if (other.tag.Equals("Finish"))
         {
-            Debug.Log("finish line!");
             State = FrogState.InFinishLine;
         }
-        else if (other.tag.Equals("Car"))
+        else if (other.tag.Equals("Car") && (State == FrogState.Idle || State == FrogState.Jumping))
         {
             State = FrogState.Die;
         }
         else if (other.tag.Equals("Platform"))
         {
+            _isOnPlatformCounter++;
             _platformRowIndex = other.GetComponentInParent<Obstacle>().RowIndex;
         }
-    }
-
-    public void UpdateFrogDataTriggerOnStay2D(Collider2D other)
-    {
-        if (State == FrogState.Idle && other.tag.Equals("Platform"))
-        {
-            _isOnPlatform = true;
-        }
+        
     }
 
     public void UpdateFrogDataTriggerOnExit2D(Collider2D other)
     {
         if (other.tag.Equals("Platform"))
         {
-            _isOnPlatform = false;
+            _isOnPlatformCounter--;
         }
     }
 
     public void UpdateFrogData(PlayerFrogAction inputFrogAction, GameStateSnapshot lastTickSnapshot, float dt, GameConfig gameConfig)
     {
         FacingDirection InputFrogActionDirection = PlayerInputUtil.ActionEnumToFacingDirection(inputFrogAction);
-
         switch (State)
         {
             case FrogState.Idle:
-                if(_isOnPlatform)
+                if(IsOnPlatform)
                 {
                     CurrentPosition = MoveWithPlatform(CurrentPosition, gameConfig, _platformRowIndex, dt, lastTickSnapshot);
                 }
@@ -128,7 +120,7 @@ public class FrogData : MovableEntityData
                 float lerpAmount = _elapsedJumpingTime / gameConfig.FROG_JUMP_TIME;
                 if (lerpAmount < 1)
                 {
-                    CurrentPosition = Vector2.Lerp(_startPosition, _targetPosition, _elapsedJumpingTime / gameConfig.FROG_JUMP_TIME);
+                    CurrentPosition = Vector2.Lerp(_startPosition, _targetPosition, lerpAmount);
                 }
                 else
                 {
@@ -142,10 +134,8 @@ public class FrogData : MovableEntityData
                     CurrentPosition.x = Mathf.Clamp(CurrentPosition.x, -6.5f, 6.5f);
                     CurrentPosition.y = Mathf.Clamp(CurrentPosition.y, -7.5f, 7.5f);
                 }
-                //Debug.Log($"CurrentPosition: {CurrentPosition}");
                 break;
             case FrogState.Die:
-                //Update health -> if 0 -> GameOver
                 _currentRestartGameFlowDelay -= dt;
                 if(_currentRestartGameFlowDelay <= 0)
                 {

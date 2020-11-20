@@ -10,6 +10,10 @@ public class UIManager : MonoBehaviour
     public Text HighScoreValueText;
     public Slider TimeSlider;
     public Image[] Health;
+    public GameObject TitlePanel;
+    public GameObject GameOverPanel;
+    public GameObject HealthPrefab;
+    public Transform HealthsTransform;
 
     private void Awake()
     {
@@ -20,7 +24,7 @@ public class UIManager : MonoBehaviour
     {
         SetScore(currentTickSnapshot.CurrentScore);
         SetHighScore(currentTickSnapshot.CurrentScore);
-        SetHealth(currentTickSnapshot.CurrentHealth);
+        SetHealth(currentTickSnapshot.CurrentHealth, currentTickSnapshot.MaxHealth);
         SetTime(currentTickSnapshot.TimeLeft, currentTickSnapshot.TimeLimit);
     }
 
@@ -37,7 +41,7 @@ public class UIManager : MonoBehaviour
         HighScoreValueText.text = higherScore.ToString();
     }
 
-    public void SetHealth(int healthLeft)
+    public void SetHealth(int healthLeft, int maxHealth)
     {
         for(int i = 0; i < Health.Length; i++)
         {
@@ -50,8 +54,13 @@ public class UIManager : MonoBehaviour
         TimeSlider.value = timeLeft / timeLimit;
     }
 
-    public void ShowGameOver()
+    public void ShowTitle(bool val)
     {
-        Debug.Log("Game Over!");
+        TitlePanel.SetActive(val);
+    }
+
+    public void ShowGameOver(bool val)
+    {
+        GameOverPanel.SetActive(val);
     }
 }
