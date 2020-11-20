@@ -8,12 +8,14 @@ public class ObstacleGameObject : MonoBehaviour
     public MovableEntityData MovableEntityData; //Assigned by GameState
     public int ObstacleWidth = 1;
     public int RowIndex = -1;
+    
+    protected Transform _obstacleTransform;
+    protected Animator[] _childrenAnimators;
+    protected Transform[] _childrenTransforms;
+    protected SpriteRenderer[] _childrenSpriteRenderers;
+    protected Collider2D[] _childrenColliders;
 
-    private Transform _obstacleTransform;
-    private Transform[] _childrenTransforms;
-    private SpriteRenderer[] _childrenSpriteRenderers;
-
-    public void Initialize(int rowIndex, Vector2 spawnPos, RowMovingDirection movingDirection)
+    public void Initialize(int rowIndex, Vector2 spawnPos, RowMovingDirection movingDirection, GameConfig gameConfig)
     {
         if (MovableEntityData == null)
         {
@@ -27,7 +29,7 @@ public class ObstacleGameObject : MonoBehaviour
         FlipChildrenSprites(MovableEntityData.FacingDirection);
     }
 
-    public void UpdateFrame(float dt, GameConfig gameConfig)
+    public virtual void UpdateFrame(float dt, GameConfig gameConfig)
     {
         Vector2 moveVector = new Vector2(dt * gameConfig.RowDataConfigs[RowIndex].RowMovingUnitPerSec, 0);
         if (gameConfig.RowDataConfigs[RowIndex].RowMovingDirection == RowMovingDirection.Right)
@@ -47,6 +49,8 @@ public class ObstacleGameObject : MonoBehaviour
         _obstacleTransform = GetComponent<Transform>();
         _childrenTransforms = _obstacleTransform.GetComponentsInChildren<Transform>();
         _childrenSpriteRenderers = _obstacleTransform.GetComponentsInChildren<SpriteRenderer>();
+        _childrenAnimators = _obstacleTransform.GetComponentsInChildren<Animator>();
+        _childrenColliders = _obstacleTransform.GetComponentsInChildren<Collider2D>();
     }
 
     private void FlipChildrenSprites(FacingDirection facingDirection)

@@ -5,11 +5,13 @@ using UnityEngine;
 public class GameConfig
 {
     public float FROG_JUMP_DISTANCE = 1;
-    public float FROG_JUMP_TIME = 0.25f;
+    public float FROG_JUMP_TIME = 0.15f;
     public float SAME_MOVE_PENALTY_TIME = 0.15f;
     public float MOVE_COOLDOWN = 0.05f;
-    public RowDataConfig[] RowDataConfigs;
+    public float TURTLE_START_OFFSET_MIN = 3f, TURTLE_START_OFFSET_MAX = 12f;
+    public float TURTLE_REPEAT_INTERVAL_MIN = 1f, TURTLE_REPEAT_INTERVAL_MAX = 6f;
 
+    public RowDataConfig[] RowDataConfigs;
     //MOCK
     public GameConfig()
     {

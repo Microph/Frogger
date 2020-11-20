@@ -9,9 +9,9 @@ public enum ObstacleType
     Log,
     Turtle,
     CarPink,
-    Truck,
     CarRed,
-    CarYellow
+    CarYellow,
+    Truck
 }
 
 public class ObstacleManager : MonoBehaviour
@@ -47,7 +47,7 @@ public class ObstacleManager : MonoBehaviour
                     Vector2 spawnPosVector = new Vector2(newObstacleSpawnPosX, i - 6.5f);
                     GameObject pooledObj = ObjectPooler.Instance.SpawnFromPool(_gameConfig.RowDataConfigs[i].ObstacleType.ToString(), spawnPosVector);
                     ObstacleGameObject obstacleGameObject = pooledObj.GetComponent<ObstacleGameObject>();
-                    obstacleGameObject.Initialize(i, spawnPosVector, rowData.RowMovingDirection);
+                    obstacleGameObject.Initialize(i, spawnPosVector, rowData.RowMovingDirection, _gameConfig);
                     rowData.ObstacleGameObjectList.Add(obstacleGameObject);
                 }
             }
