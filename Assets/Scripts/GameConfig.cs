@@ -15,13 +15,14 @@ public class GameConfig : ScriptableObject
     public float MOVE_COOLDOWN = 0.05f;
     public float TURTLE_START_OFFSET_MIN = 3f, TURTLE_START_OFFSET_MAX = 12f;
     public float TURTLE_REPEAT_INTERVAL_MIN = 1f, TURTLE_REPEAT_INTERVAL_MAX = 6f;
-    public float SPEED_INCREASE_PERCENT = 10f;
+    public float SPEED_INCREASE_PERCENT = 10f; //Increase all row movement speed when changing stage
 
     //Use when select "RandomLog" obstacle type
     public float LOG_3_PERCENT_CHANCE = 33f;
     public float LOG_5_PERCENT_CHANCE = 33f;
     public float LOG_7_PERCENT_CHANCE = 33f;
 
+    //Rows are ordered from lowest to highest
     public RowDataConfig[] RowDataConfigs;
 }
 

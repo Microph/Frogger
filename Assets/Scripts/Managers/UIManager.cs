@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     public GameObject GameOverPanel;
     public GameObject HealthPrefab;
     public Transform HealthsTransform;
+    public Toggle ToggleSuperHot;
 
     private void Awake()
     {

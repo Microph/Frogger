@@ -21,6 +21,7 @@ public class ObjectPooler : MonoBehaviour
 
     public List<Pool> Pools;
     public Dictionary<string, Queue<GameObject>> PoolDictionary;
+    public Transform PooledObjectsTransform;
 
     public GameObject SpawnFromPool (string tag, Vector2 position)
     {
@@ -49,7 +50,7 @@ public class ObjectPooler : MonoBehaviour
 
             for (int i=0; i<pool.PoolSize; i++)
             {
-                GameObject obj = Instantiate(pool.Prefab);
+                GameObject obj = Instantiate(pool.Prefab, PooledObjectsTransform);
                 obj.SetActive(false);
                 objectPool.Enqueue(obj);
             }
