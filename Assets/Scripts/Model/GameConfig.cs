@@ -14,10 +14,10 @@ public class GameConfig
     public GameConfig()
     {
         RowDataConfigs = new RowDataConfig[11];
-        RowDataConfigs[0] = new RowDataConfig(ObstacleType.None);
+        RowDataConfigs[0] = new RowDataConfig(ObstacleType.CarRed);
         RowDataConfigs[1] = new RowDataConfig(ObstacleType.None);
         RowDataConfigs[2] = new RowDataConfig(ObstacleType.None);
-        RowDataConfigs[3] = new RowDataConfig(ObstacleType.None);
+        RowDataConfigs[3] = new RowDataConfig(ObstacleType.CarRed);
         RowDataConfigs[4] = new RowDataConfig(ObstacleType.None);
         RowDataConfigs[5] = new RowDataConfig(ObstacleType.None); //should be empty
         RowDataConfigs[6] = new RowDataConfig(ObstacleType.Turtle);
@@ -46,7 +46,7 @@ public class RowDataConfig
         //InitialObstacleXPositions[0] = 0.5f;
         //InitialObstacleXPositions[1] = 1.5f;
         //InitialObstacleXPositions[2] = 3.5f;
-        RowMovingDirection = RowMovingDirection.Left;
+        RowMovingDirection = RowMovingDirection.Right;
         RowMovingUnitPerSec = 2;
         MinGap = 2;
         MaxGap = 4;

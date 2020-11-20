@@ -19,100 +19,56 @@ public class ObstacleManager : MonoBehaviour
     public List<RowData> RowDatas;
 
     public void Initialize(GameConfig gameConfig)
-    { 
+    {
         RowDatas = new List<RowData>();
         foreach (RowDataConfig rowDataConfig in gameConfig.RowDataConfigs)
         {
             RowDatas.Add(new RowData(rowDataConfig));
         }
     }
-    
+
     public void FrameUpdate(float dt, GameConfig _gameConfig)
     {
         for (int i = 0; i < RowDatas.Count; i++)
         {
-            if(RowDatas[i] == null)
+            if (RowDatas[i] == null)
             {
                 continue;
             }
 
             RowData rowData = RowDatas[i];
-            if (rowData.RowMovingDirection == RowMovingDirection.Left)
+            float lastObstacleX = GetLastObstacleTailPosX(rowData);
+            bool isGapBetweenLastObstacleAndBorderEnoughToSpawn = Mathf.Abs((int)rowData.RowMovingDirection * 7.5f - lastObstacleX) >= _gameConfig.RowDataConfigs[i].MinGap; // 7.5/-7.5 is border
+            float newObstacleSpawnPosX = lastObstacleX + ((int)rowData.RowMovingDirection * UnityEngine.Random.Range(_gameConfig.RowDataConfigs[i].MinGap, _gameConfig.RowDataConfigs[i].MaxGap));
+            if (rowData.ObstacleGameObjectList.Count == 0 || isGapBetweenLastObstacleAndBorderEnoughToSpawn)
             {
-                //move obstacle that fully left view back to pool 
-                //no need ^ for now cuz it will eventually be back when obj pool call
-
-                //ex. left -> check if right most (last obstacle in list) have gap to the right that is at least minGap in _gameConfig -> spawn new obstacle from pool
-                float lastObstacleX = GetLastObstacleTailPosX(rowData);
-                bool gapBetweenLastObstacleAndBorderIsEnoughToSpawn = Mathf.Abs(7.5f - lastObstacleX) >= _gameConfig.RowDataConfigs[i].MinGap; //7.5 is right border
-                if (rowData.MovableEntityDataList.Count == 0 || gapBetweenLastObstacleAndBorderIsEnoughToSpawn) 
+                if (_gameConfig.RowDataConfigs[i].ObstacleType != ObstacleType.None)
                 {
-                    if (_gameConfig.RowDataConfigs[i].ObstacleType != ObstacleType.None)
-                    {
-                        float newObstacleSpawnPosX = lastObstacleX + UnityEngine.Random.Range(_gameConfig.RowDataConfigs[i].MinGap, _gameConfig.RowDataConfigs[i].MaxGap);
-                        Vector2 spawnPos = new Vector2(newObstacleSpawnPosX, i - 6.5f);
-                        GameObject a = ObjectPooler.Instance.SpawnFromPool(_gameConfig.RowDataConfigs[i].ObstacleType.ToString(), spawnPos);
-                        ObstacleGameObject obstacleGameObject = a.GetComponent<ObstacleGameObject>();
-                        obstacleGameObject.RowIndex = i;
-                        obstacleGameObject.MovableEntityData = new MovableEntityData();
-                        obstacleGameObject.MovableEntityData.CurrentPosition = spawnPos;
-                        //SpriteRenderer = ?
-                        obstacleGameObject.MovableEntityData.FacingDirection = FacingDirection.Left;
-                        obstacleGameObject.MovableEntityData.Width = 3;
-                        rowData.MovableEntityDataList.Add(obstacleGameObject.MovableEntityData);
-                    }
-                }
-
-                foreach (MovableEntityData obstacleEntityData in rowData.MovableEntityDataList)
-                {
-                    //currentX - dt * MoveSpeed (MoveSpeed is X block per sec)
-                    obstacleEntityData.CurrentPosition -= new Vector2(dt * _gameConfig.RowDataConfigs[i].RowMovingUnitPerSec, 0);
+                    Vector2 spawnPosVector = new Vector2(newObstacleSpawnPosX, i - 6.5f);
+                    GameObject pooledObj = ObjectPooler.Instance.SpawnFromPool(_gameConfig.RowDataConfigs[i].ObstacleType.ToString(), spawnPosVector);
+                    ObstacleGameObject obstacleGameObject = pooledObj.GetComponent<ObstacleGameObject>();
+                    obstacleGameObject.Initialize(i, spawnPosVector, rowData.RowMovingDirection);
+                    rowData.ObstacleGameObjectList.Add(obstacleGameObject);
                 }
             }
-            else
+
+            foreach (ObstacleGameObject obstacleGameObject in rowData.ObstacleGameObjectList)
             {
-                //move obstacle that fully left view back to pool 
-                //no need ^ for now cuz it will eventually be back when obj pool call
-
-                //ex. right -> check if left most (last obstacle in list) have gap to the left that is at least minGap in _gameConfig -> spawn new obstacle from pool
-                float lastObstacleX = GetLastObstacleTailPosX(rowData);
-                bool gapBetweenLastObstacleAndBorderIsEnoughToSpawn = Mathf.Abs(-7.5f - lastObstacleX) >= _gameConfig.RowDataConfigs[i].MinGap; //-7.5 is left border
-                if (rowData.MovableEntityDataList.Count == 0 || gapBetweenLastObstacleAndBorderIsEnoughToSpawn) 
-                {
-                    if (_gameConfig.RowDataConfigs[i].ObstacleType != ObstacleType.None)
-                    {
-                        float newObstacleSpawnPosX = lastObstacleX - UnityEngine.Random.Range(_gameConfig.RowDataConfigs[i].MinGap, _gameConfig.RowDataConfigs[i].MaxGap);
-                        Vector2 spawnPos = new Vector2(newObstacleSpawnPosX, i - 6.5f);
-                        GameObject a = ObjectPooler.Instance.SpawnFromPool(_gameConfig.RowDataConfigs[i].ObstacleType.ToString(), spawnPos);
-                        ObstacleGameObject obstacleGameObject = a.GetComponent<ObstacleGameObject>();
-                        obstacleGameObject.RowIndex = i;
-                        obstacleGameObject.MovableEntityData = new MovableEntityData();
-                        obstacleGameObject.MovableEntityData.CurrentPosition = spawnPos;
-                        //SpriteRenderer = ?
-                        obstacleGameObject.MovableEntityData.FacingDirection = FacingDirection.Right;
-                        obstacleGameObject.MovableEntityData.Width = 3;
-                        rowData.MovableEntityDataList.Add(obstacleGameObject.MovableEntityData);
-                    }
-                }
-
-                foreach (MovableEntityData obstacleEntityData in rowData.MovableEntityDataList)
-                {
-                    //currentX - dt * MoveSpeed (MoveSpeed is X block per sec)
-                    obstacleEntityData.CurrentPosition += new Vector2(dt * _gameConfig.RowDataConfigs[i].RowMovingUnitPerSec, 0);
-                }
+                obstacleGameObject.UpdateFrame(dt, _gameConfig);
             }
         }
     }
 
     private float GetLastObstacleTailPosX(RowData rowData)
     {
-        if(rowData.MovableEntityDataList.Count == 0)
+        if (rowData.ObstacleGameObjectList.Count == 0)
         {
-            return rowData.RowMovingDirection == RowMovingDirection.Left ? -7.5f : 7.5f;
+            return -(int)rowData.RowMovingDirection * 7.5f;
         }
 
-        MovableEntityData lastObstacle = rowData.MovableEntityDataList[rowData.MovableEntityDataList.Count - 1];
-        float x = rowData.RowMovingDirection == RowMovingDirection.Left ? lastObstacle.CurrentPosition.x + lastObstacle.Width : lastObstacle.CurrentPosition.x - lastObstacle.Width;
+        ObstacleGameObject lastObstacle = rowData.ObstacleGameObjectList[rowData.ObstacleGameObjectList.Count - 1];
+        MovableEntityData entityData = lastObstacle.MovableEntityData;
+        float x = entityData.CurrentPosition.x + ((int)rowData.RowMovingDirection * lastObstacle.ObstacleWidth);
         return Mathf.Clamp(x, -7.5f, 7.5f);
     }
 }

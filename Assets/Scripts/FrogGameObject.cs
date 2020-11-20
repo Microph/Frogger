@@ -10,10 +10,17 @@ public class FrogGameObject : MonoBehaviour
     public Transform SpriteTransform;
     public Animator FrogAnimator;
 
+    private Transform _frogTransform;
+
+    private void Awake()
+    {
+        _frogTransform = GetComponent<Transform>();
+    }
+
     public void FrameUpdate(PlayerFrogAction inputFrogAction, GameStateSnapshot lastFrameSnapshot, float dt, GameConfig gameConfig)
     {
         FrogData.UpdateFrogData(inputFrogAction, lastFrameSnapshot, dt, gameConfig);
-        transform.position = FrogData.CurrentPosition;
+        _frogTransform.position = FrogData.CurrentPosition;
         FrogAnimator.SetBool("Jumping", FrogData.State == FrogState.Jumping);
         if (FrogData.State == FrogState.Jumping)
         {
