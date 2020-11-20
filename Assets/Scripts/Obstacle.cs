@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObstacleGameObject : MonoBehaviour
+public class Obstacle : MonoBehaviour
 {
     public MovableEntityData MovableEntityData; //Assigned by GameState
     public int ObstacleWidth = 1;
@@ -68,7 +68,7 @@ public class ObstacleGameObject : MonoBehaviour
         {
             for (int i = 0; i < _childrenSpriteRenderers.Length; i++)
             {
-                _childrenSpriteRenderers[i].flipX = true;
+                _childrenSpriteRenderers[i].flipX = false;
                 Vector2 currentlocalPos = _childrenTransforms[i + 1].localPosition;
                 _childrenTransforms[i + 1].localPosition = new Vector2(Mathf.Abs(currentlocalPos.x), currentlocalPos.y);
             }

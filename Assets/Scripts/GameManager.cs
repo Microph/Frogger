@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance;
     public static GameManager Instance { get { return _instance; } }
     public GameConfig GameConfig;
+    public UIManager UIManager;
 
     public GameState GameState;
     public GameStateSnapshot LastTickSnapshot;
@@ -43,16 +44,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        //SetupNewGame
-    }
-
-    private void SetupNewGame()
-    {
-        //initize stuffs
-    }
-
     void FixedUpdate()
     {
         //main game loop
@@ -60,5 +51,7 @@ public class GameManager : MonoBehaviour
         GameStateSnapshot nextSnapShot = GameState.UpdateToNextTick(LastTickSnapshot, dt, _gameConfig, _playerInput.PlayerFrog);
         LastTickSnapshot = CurrentTickSnapshot;
         CurrentTickSnapshot = nextSnapShot;
+
+        UIManager.UpdateUI(LastTickSnapshot);
     }
 }

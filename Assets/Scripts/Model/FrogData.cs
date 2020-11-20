@@ -9,7 +9,9 @@ public enum FrogState
     Idle,
     Jumping,
     Die,
-    InFinishLine
+    InFinishLine,
+    WaitUpdateDie,
+    WaitUpdateFinishLine
 }
 
 public class FrogData : MovableEntityData
@@ -18,6 +20,7 @@ public class FrogData : MovableEntityData
     public float _currentMoveCoolDown = 0.1f;
     public float _currentSameMovePenaltyTime = 0.15f;
     public float _elapsedJumpingTime = 0f;
+    public float _currentRestartGameFlowDelay = 2f;
     public Vector2 _startPosition;
     public Vector2 _targetPosition;
 
@@ -31,7 +34,7 @@ public class FrogData : MovableEntityData
     public bool IsDrown()
     {
         bool isDrown = CurrentPosition.y >= -0.5f && State != FrogState.Jumping && !_isOnPlatform;
-        Debug.Log("isDrown:" + isDrown);
+        //Debug.Log("isDrown:" + isDrown);
         return isDrown;
     }
 
@@ -44,6 +47,7 @@ public class FrogData : MovableEntityData
     {
         if (other.tag.Equals("Finish"))
         {
+            Debug.Log("finish line!");
             State = FrogState.InFinishLine;
         }
         else if (other.tag.Equals("Car"))
@@ -52,7 +56,7 @@ public class FrogData : MovableEntityData
         }
         else if (other.tag.Equals("Platform"))
         {
-            _platformRowIndex = other.GetComponentInParent<ObstacleGameObject>().RowIndex;
+            _platformRowIndex = other.GetComponentInParent<Obstacle>().RowIndex;
         }
     }
 
@@ -79,15 +83,9 @@ public class FrogData : MovableEntityData
         switch (State)
         {
             case FrogState.Idle:
-                if(IsDrown())
-                {
-                    State = FrogState.Die;
-                    return;
-                }
-
                 if(_isOnPlatform)
                 {
-                    CurrentPosition = MoveWithPlatform(CurrentPosition, gameConfig, _platformRowIndex, dt);
+                    CurrentPosition = MoveWithPlatform(CurrentPosition, gameConfig, _platformRowIndex, dt, lastTickSnapshot);
                 }
 
                 _currentMoveCoolDown -= _currentMoveCoolDown > 0 ? dt : 0;
@@ -119,6 +117,11 @@ public class FrogData : MovableEntityData
                     _currentMoveCoolDown = gameConfig.MOVE_COOLDOWN;
                     State = FrogState.Jumping;
                 }
+
+                if (IsDrown())
+                {
+                    State = FrogState.Die;
+                }
                 break;
             case FrogState.Jumping:
                 _elapsedJumpingTime += dt;
@@ -137,30 +140,39 @@ public class FrogData : MovableEntityData
                 if (IsOnGround())
                 {
                     CurrentPosition.x = Mathf.Clamp(CurrentPosition.x, -6.5f, 6.5f);
+                    CurrentPosition.y = Mathf.Clamp(CurrentPosition.y, -7.5f, 7.5f);
                 }
                 //Debug.Log($"CurrentPosition: {CurrentPosition}");
                 break;
             case FrogState.Die:
                 //Update health -> if 0 -> GameOver
-                CurrentPosition = gameConfig.FROG_START_POINT;
-                State = FrogState.Idle;
+                _currentRestartGameFlowDelay -= dt;
+                if(_currentRestartGameFlowDelay <= 0)
+                {
+                    _currentRestartGameFlowDelay = gameConfig.RESTART_GAME_FLOW_DELAY;
+                    State = FrogState.WaitUpdateDie;
+                }
                 break;
             case FrogState.InFinishLine:
-                CurrentPosition = gameConfig.FROG_START_POINT;
-                State = FrogState.Idle;
+                _currentRestartGameFlowDelay -= dt;
+                if (_currentRestartGameFlowDelay <= 0)
+                {
+                    _currentRestartGameFlowDelay = gameConfig.RESTART_GAME_FLOW_DELAY;
+                    State = FrogState.WaitUpdateFinishLine;
+                }
                 break;
             default: break;
         }
     }
 
-    private Vector2 MoveWithPlatform(Vector2 currentPosition, GameConfig gameConfig, int rowIndex, float dt)
+    private Vector2 MoveWithPlatform(Vector2 currentPosition, GameConfig gameConfig, int rowIndex, float dt, GameStateSnapshot lastTick)
     {
         if (rowIndex == -1)
         {
             return currentPosition;
         }
 
-        float unitPerSec = gameConfig.RowDataConfigs[rowIndex].GetRowMovingUnitPerSec();
+        float unitPerSec = gameConfig.RowDataConfigs[rowIndex].GetRowMovingUnitPerSec() * GameState.GetGameSpeedModifier(gameConfig, lastTick.CurrentRound);
         RowMovingDirection rowMovingDirection = gameConfig.RowDataConfigs[rowIndex].RowMovingDirection;
         if (rowMovingDirection == RowMovingDirection.Right)
         {

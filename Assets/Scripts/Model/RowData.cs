@@ -10,23 +10,20 @@ public enum RowMovingSpeed
 {
     Slow = 1,
     Medium = 2,
-    High = 4
+    High = 3
 }
 
 public class RowData
 {
     public RowMovingDirection RowMovingDirection;
     public float RowMovingUnitPerSec;
-    public List<ObstacleGameObject> ObstacleGameObjectList;
+    public List<Obstacle> ObstacleGameObjectList;
 
-    public RowData(RowDataConfig rowDataConfig)
+    public RowData(RowDataConfig rowDataConfig, GameConfig gameConfig, int currentRound)
     {
         RowMovingDirection = rowDataConfig.RowMovingDirection;
-        RowMovingUnitPerSec = rowDataConfig.GetRowMovingUnitPerSec();
-        ObstacleGameObjectList = new List<ObstacleGameObject>();
-        //foreach(float initialXPosition in rowDataConfig.InitialObstacleXPositions)
-        //{
-            //TODO
-        //}
+        RowMovingUnitPerSec = rowDataConfig.GetRowMovingUnitPerSec() * GameState.GetGameSpeedModifier(gameConfig, currentRound);
+        ObstacleGameObjectList = new List<Obstacle>();
     }
+    
 }

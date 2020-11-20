@@ -12,7 +12,7 @@ public enum TurtleState
     Diving
 }
 
-public class TurtleGameObject : ObstacleGameObject
+public class Turtle : Obstacle
 {
     public float StartOffsetTime = 1f;
     public float RepeatIntervalTime = 1f;

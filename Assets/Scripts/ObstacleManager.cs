@@ -23,13 +23,26 @@ public class ObstacleManager : MonoBehaviour
 {
     public List<RowData> RowDatas;
 
-    public void Initialize(GameConfig gameConfig)
+    public void Initialize(GameConfig gameConfig, int currentRound)
     {
         RowDatas = new List<RowData>();
         foreach (RowDataConfig rowDataConfig in gameConfig.RowDataConfigs)
         {
-            RowDatas.Add(new RowData(rowDataConfig));
+            RowDatas.Add(new RowData(rowDataConfig, gameConfig, currentRound));
         }
+    }
+
+    public void ResetToNewLevel(GameConfig gameConfig, int currentRound)
+    {
+        foreach(RowData rowData in RowDatas)
+        {
+            foreach(Obstacle obstacle in rowData.ObstacleGameObjectList)
+            {
+                obstacle.gameObject.SetActive(false);
+            }
+        }
+
+        Initialize(gameConfig, currentRound);
     }
 
     public void TickUpdate(float dt, GameConfig _gameConfig)
@@ -70,7 +83,7 @@ public class ObstacleManager : MonoBehaviour
                 }
             }
 
-            foreach (ObstacleGameObject obstacleGameObject in rowData.ObstacleGameObjectList)
+            foreach (Obstacle obstacleGameObject in rowData.ObstacleGameObjectList)
             {
                 obstacleGameObject.UpdateTick(dt, _gameConfig);
             }
@@ -81,7 +94,7 @@ public class ObstacleManager : MonoBehaviour
     {
         Vector2 spawnPosVector = new Vector2(newObstacleSpawnPosX, i - 6.5f);
         GameObject pooledObj = ObjectPooler.Instance.SpawnFromPool(obstacleType.ToString(), spawnPosVector);
-        ObstacleGameObject obstacleGameObject = pooledObj.GetComponent<ObstacleGameObject>();
+        Obstacle obstacleGameObject = pooledObj.GetComponent<Obstacle>();
         obstacleGameObject.Initialize(i, spawnPosVector, rowData.RowMovingDirection, _gameConfig);
         rowData.ObstacleGameObjectList.Add(obstacleGameObject);
     }
@@ -93,7 +106,7 @@ public class ObstacleManager : MonoBehaviour
             return -(int)rowData.RowMovingDirection * 7.5f;
         }
 
-        ObstacleGameObject lastObstacle = rowData.ObstacleGameObjectList[rowData.ObstacleGameObjectList.Count - 1];
+        Obstacle lastObstacle = rowData.ObstacleGameObjectList[rowData.ObstacleGameObjectList.Count - 1];
         MovableEntityData entityData = lastObstacle.MovableEntityData;
         float x = entityData.CurrentPosition.x + ((int)rowData.RowMovingDirection * lastObstacle.ObstacleWidth);
         return Mathf.Clamp(x, -7.5f, 7.5f);

@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: GameConfig0
   m_EditorClassIdentifier: 
   FROG_START_POINT: {x: 0.5, y: -7.5}
+  GAME_TIME_LIMIT: 30
+  RESTART_GAME_FLOW_DELAY: 2
   FROG_JUMP_DISTANCE: 1
   FROG_JUMP_TIME: 0.15
   PER_ROUND_SPEED: 0.15
@@ -28,3 +30,13 @@ MonoBehaviour:
   LOG_7_PERCENT_CHANCE: 33
   RowDataConfigs:
   - {fileID: 11400000, guid: e1b874e100ee9f147979f89ce6ebf29d, type: 2}
+  - {fileID: 11400000, guid: 4b3281c9b7b39b44198a3f16694e07d9, type: 2}
+  - {fileID: 11400000, guid: 8e19329f6200ae64796be4a078cf8f7b, type: 2}
+  - {fileID: 11400000, guid: 867419ef264c2d14fa9532ce5e329a7a, type: 2}
+  - {fileID: 11400000, guid: 186a39a688020c94bb74366c40fec59e, type: 2}
+  - {fileID: 11400000, guid: 1663c221c5f21d441a8bf39345467c8a, type: 2}
+  - {fileID: 11400000, guid: 58c882d9ac489194385f52adb7972a76, type: 2}
+  - {fileID: 11400000, guid: 54bd00c8b865d1f4ebabd8a55975da19, type: 2}
+  - {fileID: 11400000, guid: 1bbf4d76377ae01478c3e890b6bcd90a, type: 2}
+  - {fileID: 11400000, guid: d96b0ce0ca8a18b4db3b6b4824a9491b, type: 2}
+  - {fileID: 11400000, guid: bc99de205db75e94fbb6581d31eca816, type: 2}

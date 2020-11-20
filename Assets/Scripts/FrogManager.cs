@@ -14,8 +14,17 @@ public class FrogManager : MonoBehaviour
 
     public void Initialize(FrogData frogData)
     {
-        FrogData = frogData; 
+        FrogData = frogData;
         _frogTransform = GetComponent<Transform>();
+    }
+
+    public void ResetFrogToStartPosition(GameConfig gameConfig)
+    {
+        FrogData.State = FrogState.Idle;
+        FrogData.CurrentPosition = gameConfig.FROG_START_POINT;
+        _frogTransform.position = FrogData.CurrentPosition;
+        SpriteTransform.eulerAngles = GetSpriteRotationValue(FacingDirection.Up);
+        FrogAnimator.Play("Idle");
     }
 
     public FrogState TickUpdate(PlayerFrogAction inputFrogAction, GameStateSnapshot lastTickSnapshot, float dt, GameConfig gameConfig)
@@ -28,7 +37,7 @@ public class FrogManager : MonoBehaviour
             SpriteTransform.eulerAngles = GetSpriteRotationValue(FrogData.FacingDirection);
             FrogAnimator.SetBool("Jumping", true);
         }
-        else if(FrogData.State == FrogState.Die)
+        else if (FrogData.State == FrogState.Die)
         {
             SpriteTransform.eulerAngles = GetSpriteRotationValue(FacingDirection.Up);
             if (FrogData.IsDrown())
@@ -39,6 +48,16 @@ public class FrogManager : MonoBehaviour
             {
                 FrogAnimator.SetBool("CollisionDie", true);
             }
+        }
+        else if (FrogData.State == FrogState.InFinishLine)
+        {
+            FrogAnimator.SetTrigger("GoInvisible");
+        }
+        else if (FrogData.State == FrogState.WaitUpdateFinishLine || FrogData.State == FrogState.WaitUpdateDie )
+        {
+            FrogAnimator.SetTrigger("DoneWait");
+            FrogAnimator.SetBool("DrownDie", false);
+            FrogAnimator.SetBool("CollisionDie", false);
         }
         else
         {
