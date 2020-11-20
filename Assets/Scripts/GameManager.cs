@@ -8,7 +8,8 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
     public static GameManager Instance { get { return _instance; } }
-    
+    public GameConfig GameConfig;
+
     public GameState GameState;
     public GameStateSnapshot LastTickSnapshot;
     public GameStateSnapshot CurrentTickSnapshot;
@@ -18,18 +19,12 @@ public class GameManager : MonoBehaviour
     
     private void Awake()
     {
+        _gameConfig = GameConfig;
         _instance = this;
         _playerInput = new PlayerInput();
-        _gameConfig = new GameConfig();
         GameState.Initialize(_gameConfig);
         LastTickSnapshot = GameState.GetSnapshot();
         CurrentTickSnapshot = LastTickSnapshot;
-
-#if UNITY_IOS || UNITY_ANDROID
-        //mobileInputs.SetActive(true);
-        Screen.orientation = ScreenOrientation.Portrait;
-#endif
-
     }
 
     private void OnEnable()

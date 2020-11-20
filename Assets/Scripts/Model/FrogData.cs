@@ -42,7 +42,11 @@ public class FrogData : MovableEntityData
 
     public void UpdateFrogDataTriggerEnter2D(Collider2D other)
     {
-        if (other.tag.Equals("Car"))
+        if (other.tag.Equals("Finish"))
+        {
+            State = FrogState.InFinishLine;
+        }
+        else if (other.tag.Equals("Car"))
         {
             State = FrogState.Die;
         }
@@ -137,8 +141,13 @@ public class FrogData : MovableEntityData
                 //Debug.Log($"CurrentPosition: {CurrentPosition}");
                 break;
             case FrogState.Die:
+                //Update health -> if 0 -> GameOver
+                CurrentPosition = gameConfig.FROG_START_POINT;
+                State = FrogState.Idle;
                 break;
             case FrogState.InFinishLine:
+                CurrentPosition = gameConfig.FROG_START_POINT;
+                State = FrogState.Idle;
                 break;
             default: break;
         }
@@ -151,7 +160,7 @@ public class FrogData : MovableEntityData
             return currentPosition;
         }
 
-        float unitPerSec = gameConfig.RowDataConfigs[rowIndex].RowMovingUnitPerSec;
+        float unitPerSec = gameConfig.RowDataConfigs[rowIndex].GetRowMovingUnitPerSec();
         RowMovingDirection rowMovingDirection = gameConfig.RowDataConfigs[rowIndex].RowMovingDirection;
         if (rowMovingDirection == RowMovingDirection.Right)
         {

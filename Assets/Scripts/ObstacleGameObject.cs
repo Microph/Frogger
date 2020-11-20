@@ -31,7 +31,7 @@ public class ObstacleGameObject : MonoBehaviour
 
     public virtual void UpdateTick(float dt, GameConfig gameConfig)
     {
-        Vector2 moveVector = new Vector2(dt * gameConfig.RowDataConfigs[RowIndex].RowMovingUnitPerSec, 0);
+        Vector2 moveVector = new Vector2(dt * gameConfig.RowDataConfigs[RowIndex].GetRowMovingUnitPerSec(), 0);
         if (gameConfig.RowDataConfigs[RowIndex].RowMovingDirection == RowMovingDirection.Right)
         {
             MovableEntityData.CurrentPosition += moveVector;

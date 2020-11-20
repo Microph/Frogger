@@ -6,6 +6,13 @@ public enum RowMovingDirection
     Right = -1
 }
 
+public enum RowMovingSpeed
+{
+    Slow = 1,
+    Medium = 2,
+    High = 4
+}
+
 public class RowData
 {
     public RowMovingDirection RowMovingDirection;
@@ -15,7 +22,7 @@ public class RowData
     public RowData(RowDataConfig rowDataConfig)
     {
         RowMovingDirection = rowDataConfig.RowMovingDirection;
-        RowMovingUnitPerSec = rowDataConfig.RowMovingUnitPerSec;
+        RowMovingUnitPerSec = rowDataConfig.GetRowMovingUnitPerSec();
         ObstacleGameObjectList = new List<ObstacleGameObject>();
         //foreach(float initialXPosition in rowDataConfig.InitialObstacleXPositions)
         //{

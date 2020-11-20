@@ -6,11 +6,16 @@ using UnityEngine;
 public enum ObstacleType
 {
     None,
-    Log,
-    Turtle,
+    Log3,
+    Log5,
+    Log7,
+    RandomLog,
+    Turtle2,
+    Turtle3,
     CarPink,
     CarRed,
     CarYellow,
+    Tractor,
     Truck
 }
 
@@ -42,13 +47,26 @@ public class ObstacleManager : MonoBehaviour
             float newObstacleSpawnPosX = lastObstacleX + ((int)rowData.RowMovingDirection * UnityEngine.Random.Range(_gameConfig.RowDataConfigs[i].MinGap, _gameConfig.RowDataConfigs[i].MaxGap));
             if (rowData.ObstacleGameObjectList.Count == 0 || isGapBetweenLastObstacleAndBorderEnoughToSpawn)
             {
-                if (_gameConfig.RowDataConfigs[i].ObstacleType != ObstacleType.None)
+                if(_gameConfig.RowDataConfigs[i].ObstacleType == ObstacleType.RandomLog)
                 {
-                    Vector2 spawnPosVector = new Vector2(newObstacleSpawnPosX, i - 6.5f);
-                    GameObject pooledObj = ObjectPooler.Instance.SpawnFromPool(_gameConfig.RowDataConfigs[i].ObstacleType.ToString(), spawnPosVector);
-                    ObstacleGameObject obstacleGameObject = pooledObj.GetComponent<ObstacleGameObject>();
-                    obstacleGameObject.Initialize(i, spawnPosVector, rowData.RowMovingDirection, _gameConfig);
-                    rowData.ObstacleGameObjectList.Add(obstacleGameObject);
+                    float sumLogWholeChance = _gameConfig.LOG_3_PERCENT_CHANCE + _gameConfig.LOG_5_PERCENT_CHANCE + _gameConfig.LOG_7_PERCENT_CHANCE;
+                    float randomOutcome = UnityEngine.Random.Range(0, sumLogWholeChance);
+                    if(randomOutcome < _gameConfig.LOG_3_PERCENT_CHANCE)
+                    {
+                        SpawnObstacle(_gameConfig, ObstacleType.Log3, i, rowData, newObstacleSpawnPosX);
+                    }
+                    else if(randomOutcome < _gameConfig.LOG_5_PERCENT_CHANCE)
+                    {
+                        SpawnObstacle(_gameConfig, ObstacleType.Log5, i, rowData, newObstacleSpawnPosX);
+                    }
+                    else
+                    {
+                        SpawnObstacle(_gameConfig, ObstacleType.Log7, i, rowData, newObstacleSpawnPosX);
+                    }
+                }
+                else if (_gameConfig.RowDataConfigs[i].ObstacleType != ObstacleType.None)
+                {
+                    SpawnObstacle(_gameConfig, _gameConfig.RowDataConfigs[i].ObstacleType, i, rowData, newObstacleSpawnPosX);
                 }
             }
 
@@ -57,6 +75,15 @@ public class ObstacleManager : MonoBehaviour
                 obstacleGameObject.UpdateTick(dt, _gameConfig);
             }
         }
+    }
+
+    private static void SpawnObstacle(GameConfig _gameConfig, ObstacleType obstacleType, int i, RowData rowData, float newObstacleSpawnPosX)
+    {
+        Vector2 spawnPosVector = new Vector2(newObstacleSpawnPosX, i - 6.5f);
+        GameObject pooledObj = ObjectPooler.Instance.SpawnFromPool(obstacleType.ToString(), spawnPosVector);
+        ObstacleGameObject obstacleGameObject = pooledObj.GetComponent<ObstacleGameObject>();
+        obstacleGameObject.Initialize(i, spawnPosVector, rowData.RowMovingDirection, _gameConfig);
+        rowData.ObstacleGameObjectList.Add(obstacleGameObject);
     }
 
     private float GetLastObstacleTailPosX(RowData rowData)

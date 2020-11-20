@@ -18,7 +18,7 @@ public class FrogManager : MonoBehaviour
         _frogTransform = GetComponent<Transform>();
     }
 
-    public void TickUpdate(PlayerFrogAction inputFrogAction, GameStateSnapshot lastTickSnapshot, float dt, GameConfig gameConfig)
+    public FrogState TickUpdate(PlayerFrogAction inputFrogAction, GameStateSnapshot lastTickSnapshot, float dt, GameConfig gameConfig)
     {
         FrogData.UpdateFrogData(inputFrogAction, lastTickSnapshot, dt, gameConfig);
         _frogTransform.position = FrogData.CurrentPosition;
@@ -45,6 +45,8 @@ public class FrogManager : MonoBehaviour
             FrogAnimator.SetBool("CollisionDie", false);
             FrogAnimator.SetBool("DrownDie", false);
         }
+
+        return FrogData.State;
     }
 
     private Vector3 GetSpriteRotationValue(FacingDirection facingDirection)

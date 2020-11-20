@@ -14,13 +14,16 @@ public class GameState : MonoBehaviour
 {
     public FrogManager FrogManager;
     public ObstacleManager ObstacleManager;
+    public ScoreManager ScoreManager;
     public FinishSpotGameObject[] FinishSpots;
 
     private PlayerFrogAction _inputFrogAction = PlayerFrogAction.None;
-    
+    private FrogState _frogState;
+
+
     public void Initialize(GameConfig gameConfig)
     {
-        FrogManager.Initialize(new FrogData(new MovableEntityData(new Vector2(0.5f, -7.5f), FacingDirection.Up)));
+        FrogManager.Initialize(new FrogData(new MovableEntityData(gameConfig.FROG_START_POINT, FacingDirection.Up)));
         ObstacleManager.Initialize(gameConfig);
     }
 
@@ -37,9 +40,13 @@ public class GameState : MonoBehaviour
         Vector2 inputVector2 = currentTickPlayerFrogAction.Move.ReadValue<Vector2>();
         //Debug.Log($"inputVector2: {inputVector2}");
         _inputFrogAction = PlayerInputUtil.ConvertVector2ToPlayerFrogActionEnum(inputVector2);
-        FrogManager.TickUpdate(_inputFrogAction, lastTickGameStateSnapshot, dt, gameConfig);
         ObstacleManager.TickUpdate(dt, gameConfig);
-        //_gameState.UpdateGameStatus(dt, _gameConfig);
+        _frogState = FrogManager.TickUpdate(_inputFrogAction, lastTickGameStateSnapshot, dt, gameConfig);
+        if(_frogState == FrogState.Die)
+        {
+
+        }
+
         return GetSnapshot();
     }
 }

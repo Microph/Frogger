@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0af9e6245fa0f14782d338215ea10fd, type: 3}
+  m_Name: GameConfig0
+  m_EditorClassIdentifier: 
+  FROG_START_POINT: {x: 0.5, y: -7.5}
+  FROG_JUMP_DISTANCE: 1
+  FROG_JUMP_TIME: 0.15
+  PER_ROUND_SPEED: 0.15
+  SAME_MOVE_PENALTY_TIME: 0.15
+  MOVE_COOLDOWN: 0.05
+  TURTLE_START_OFFSET_MIN: 3
+  TURTLE_START_OFFSET_MAX: 12
+  TURTLE_REPEAT_INTERVAL_MIN: 1
+  TURTLE_REPEAT_INTERVAL_MAX: 6
+  SPEED_INCREASE_PERCENT: 10
+  LOG_3_PERCENT_CHANCE: 33
+  LOG_5_PERCENT_CHANCE: 33
+  LOG_7_PERCENT_CHANCE: 33
+  RowDataConfigs:
+  - {fileID: 11400000, guid: e1b874e100ee9f147979f89ce6ebf29d, type: 2}
