@@ -76,7 +76,7 @@ public class GameState : MonoBehaviour
         }
     }
 
-    public GameStateSnapshot UpdateToNextTick(GameStateSnapshot lastTickGameStateSnapshot, float dt, GameConfig gameConfig, PlayerInput.PlayerFrogActions currentTickPlayerFrogAction)
+    public GameStateSnapshot UpdateToNextTick(GameStateSnapshot lastTickGameStateSnapshot, float dt, GameConfig gameConfig, ObjectPooler objectPooler, UIManager uiManager, PlayerInput.PlayerFrogActions currentTickPlayerFrogAction)
     {
         //Get player output
         Vector2 inputVector2 = currentTickPlayerFrogAction.Move.ReadValue<Vector2>();
@@ -88,9 +88,9 @@ public class GameState : MonoBehaviour
             if (_inputFrogAction != PlayerFrogAction.None)
             {
                 _isFirstTimeShow = false;
-                GameManager.Instance.UIManager.UpdateSuperHotModeValue();
+                uiManager.UpdateSuperHotModeValue();
                 IsSuperHotMode = PlayerPrefs.GetInt("EnableSuperHotMode", 1) == 1 ? true : false;
-                GameManager.Instance.UIManager.ShowTitle(false);
+                uiManager.ShowTitle(false);
             }
             else
             {
@@ -134,7 +134,7 @@ public class GameState : MonoBehaviour
 
         if (_frogState == FrogState.WaitUpdateDie)
         {
-            ProcessDie(gameConfig);
+            ProcessDie(gameConfig, uiManager);
         }
         else if(_frogState == FrogState.WaitUpdateFinishLine)
         {
@@ -144,7 +144,7 @@ public class GameState : MonoBehaviour
         }
 
         //Tick update obstacle
-        ObstacleManager.TickUpdate(dt, gameConfig);
+        ObstacleManager.TickUpdate(dt, gameConfig, objectPooler);
         return GetSnapshot();
     }
 
@@ -162,13 +162,13 @@ public class GameState : MonoBehaviour
         }
     }
 
-    private void ProcessDie(GameConfig gameConfig)
+    private void ProcessDie(GameConfig gameConfig, UIManager uiManager)
     {
         CurrentHealth -= 1;
         if (CurrentHealth == 0)
         {
             _isGameOver = true;
-            GameManager.Instance.UIManager.ShowGameOver(true);
+            uiManager.ShowGameOver(true);
         }
         else
         {

@@ -16,9 +16,6 @@ public class Pool
 //Pool obstacles with enough number to show at the same time on screen
 public class ObjectPooler : MonoBehaviour
 {
-    private static ObjectPooler _instance;
-    public static ObjectPooler Instance { get { return _instance; } }
-
     public List<Pool> Pools;
     public Dictionary<string, Queue<GameObject>> PoolDictionary;
     public Transform PooledObjectsTransform;
@@ -33,11 +30,6 @@ public class ObjectPooler : MonoBehaviour
         //there will be no problems enqueing it right away.
         PoolDictionary[tag].Enqueue(objToSpawn);
         return objToSpawn;
-    }
-
-    private void Awake()
-    {
-        _instance = this;
     }
 
     private void Start()

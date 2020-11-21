@@ -193,7 +193,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &153139273
 GameObject:
@@ -2369,7 +2369,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &665308189
 PrefabInstance:
@@ -2778,7 +2778,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &714893330 stripped
 RectTransform:
@@ -5427,7 +5427,7 @@ Transform:
   - {fileID: 1323279928}
   - {fileID: 696473761}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &782584099
 GameObject:
@@ -5443,7 +5443,7 @@ GameObject:
   - component: {fileID: 782584100}
   - component: {fileID: 782584104}
   m_Layer: 0
-  m_Name: Frog
+  m_Name: FrogManager
   m_TagString: Frog
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5502,7 +5502,7 @@ Transform:
   m_Children:
   - {fileID: 1629917095}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &782584104
 Animator:
@@ -6519,7 +6519,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1106181581
 GameObject:
@@ -6622,7 +6622,7 @@ RectTransform:
   - {fileID: 1224908450}
   - {fileID: 1447448722}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -7266,6 +7266,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GameConfig: {fileID: 11400000, guid: 615207b86b3ed8f49a9f3ab57c369dfe, type: 2}
   UIManager: {fileID: 1106181586}
+  ObjectPooler: {fileID: 1100631737}
   GameState: {fileID: 707287001}
 --- !u!4 &1406338534
 Transform:
@@ -7279,7 +7280,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1428587496
 PrefabInstance:
@@ -8326,7 +8327,7 @@ Transform:
   m_Children:
   - {fileID: 732868924}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1629917093
 GameObject:

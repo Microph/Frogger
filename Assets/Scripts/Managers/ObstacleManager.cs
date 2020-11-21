@@ -45,7 +45,7 @@ public class ObstacleManager : MonoBehaviour
         Initialize(gameConfig, currentRound);
     }
 
-    public void TickUpdate(float dt, GameConfig _gameConfig)
+    public void TickUpdate(float dt, GameConfig _gameConfig, ObjectPooler objectPooler)
     {
         for (int i = 0; i < RowDatas.Count; i++)
         {
@@ -66,20 +66,20 @@ public class ObstacleManager : MonoBehaviour
                     float randomOutcome = UnityEngine.Random.Range(0, sumLogWholeChance);
                     if(randomOutcome < _gameConfig.LOG_3_PERCENT_CHANCE)
                     {
-                        SpawnObstacle(_gameConfig, ObstacleType.Log3, i, rowData, newObstacleSpawnPosX);
+                        SpawnObstacle(_gameConfig, ObstacleType.Log3, i, rowData, newObstacleSpawnPosX, objectPooler);
                     }
                     else if(randomOutcome < _gameConfig.LOG_5_PERCENT_CHANCE)
                     {
-                        SpawnObstacle(_gameConfig, ObstacleType.Log5, i, rowData, newObstacleSpawnPosX);
+                        SpawnObstacle(_gameConfig, ObstacleType.Log5, i, rowData, newObstacleSpawnPosX, objectPooler);
                     }
                     else
                     {
-                        SpawnObstacle(_gameConfig, ObstacleType.Log7, i, rowData, newObstacleSpawnPosX);
+                        SpawnObstacle(_gameConfig, ObstacleType.Log7, i, rowData, newObstacleSpawnPosX, objectPooler);
                     }
                 }
                 else if (_gameConfig.RowDataConfigs[i].ObstacleType != ObstacleType.None)
                 {
-                    SpawnObstacle(_gameConfig, _gameConfig.RowDataConfigs[i].ObstacleType, i, rowData, newObstacleSpawnPosX);
+                    SpawnObstacle(_gameConfig, _gameConfig.RowDataConfigs[i].ObstacleType, i, rowData, newObstacleSpawnPosX, objectPooler);
                 }
             }
 
@@ -110,10 +110,10 @@ public class ObstacleManager : MonoBehaviour
         }
     }
 
-    private static void SpawnObstacle(GameConfig _gameConfig, ObstacleType obstacleType, int i, RowData rowData, float newObstacleSpawnPosX)
+    private static void SpawnObstacle(GameConfig _gameConfig, ObstacleType obstacleType, int i, RowData rowData, float newObstacleSpawnPosX, ObjectPooler objPooler)
     {
         Vector2 spawnPosVector = new Vector2(newObstacleSpawnPosX, i - 6.5f);
-        GameObject pooledObj = ObjectPooler.Instance.SpawnFromPool(obstacleType.ToString(), spawnPosVector);
+        GameObject pooledObj = objPooler.SpawnFromPool(obstacleType.ToString(), spawnPosVector);
         Obstacle obstacleGameObject = pooledObj.GetComponent<Obstacle>();
         obstacleGameObject.Initialize(i, spawnPosVector, rowData.RowMovingDirection, _gameConfig);
         rowData.ObstacleGameObjectList.Add(obstacleGameObject);

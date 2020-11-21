@@ -6,10 +6,9 @@ using static UnityEngine.InputSystem.InputAction;
 
 public class GameManager : MonoBehaviour
 {
-    private static GameManager _instance;
-    public static GameManager Instance { get { return _instance; } }
     public GameConfig GameConfig;
     public UIManager UIManager;
+    public ObjectPooler ObjectPooler;
 
     public GameState GameState;
     public GameStateSnapshot LastTickSnapshot;
@@ -20,7 +19,6 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         _gameConfig = GameConfig;
-        _instance = this;
         _playerInput = new PlayerInput();
         GameState.Initialize(_gameConfig);
         LastTickSnapshot = GameState.GetSnapshot();
@@ -47,7 +45,7 @@ public class GameManager : MonoBehaviour
         //Main game loop
         UIManager.UpdateUI(LastTickSnapshot);
         float dt = Time.deltaTime;
-        GameStateSnapshot nextSnapShot = GameState.UpdateToNextTick(LastTickSnapshot, dt, _gameConfig, _playerInput.PlayerFrog);
+        GameStateSnapshot nextSnapShot = GameState.UpdateToNextTick(LastTickSnapshot, dt, _gameConfig, ObjectPooler, UIManager, _playerInput.PlayerFrog);
         LastTickSnapshot = nextSnapShot;
     }
 }
