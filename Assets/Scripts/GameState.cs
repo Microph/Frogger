@@ -26,6 +26,7 @@ public class GameState : MonoBehaviour
     public float TimeLimit, TimeLeft;
     public int MaxHealth, CurrentHealth;
     public int CurrentRound = 0;
+    public bool IsSuperHotMode = false;
 
     private PlayerFrogAction _inputFrogAction = PlayerFrogAction.None;
     private FrogState _frogState;
@@ -60,6 +61,7 @@ public class GameState : MonoBehaviour
         CurrentRound = 0;
         FrogManager.Initialize(new FrogData(new MovableEntityData(gameConfig.FROG_START_POINT, FacingDirection.Up)));
         ObstacleManager.Initialize(gameConfig, CurrentRound);
+        IsSuperHotMode = PlayerPrefs.GetInt("EnableSuperHotMode", 1) == 1 ? true : false;
     }
 
     private void StartNewLevel(GameConfig gameConfig)
@@ -79,13 +81,15 @@ public class GameState : MonoBehaviour
         //Get player output
         Vector2 inputVector2 = currentTickPlayerFrogAction.Move.ReadValue<Vector2>();
         _inputFrogAction = PlayerInputUtil.ConvertVector2ToPlayerFrogActionEnum(inputVector2);
-
+        
         //First time button hit will close Title
         if(_isFirstTimeShow)
         {
             if (_inputFrogAction != PlayerFrogAction.None)
             {
                 _isFirstTimeShow = false;
+                GameManager.Instance.UIManager.UpdateSuperHotModeValue();
+                IsSuperHotMode = PlayerPrefs.GetInt("EnableSuperHotMode", 1) == 1 ? true : false;
                 GameManager.Instance.UIManager.ShowTitle(false);
             }
             else
@@ -105,6 +109,12 @@ public class GameState : MonoBehaviour
             return GetSnapshot();
         }
 
+        //Super Hot Mode
+        if (IsSuperHotMode && (_inputFrogAction == PlayerFrogAction.None))
+        {
+            return GetSnapshot();
+        }
+
         //Update main timer in game
         TimeLeft -= dt;
         if (TimeLeft <= 0)
@@ -118,7 +128,7 @@ public class GameState : MonoBehaviour
         {
             if(_inputFrogAction == PlayerFrogAction.MoveUp)
             {
-                CurrentScore += 5; //It somehows trigger twice, giving 10 points when move up anyway.
+                CurrentScore += 10;
             }
         }
 

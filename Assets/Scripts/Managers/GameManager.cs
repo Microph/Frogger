@@ -13,7 +13,6 @@ public class GameManager : MonoBehaviour
 
     public GameState GameState;
     public GameStateSnapshot LastTickSnapshot;
-    public GameStateSnapshot CurrentTickSnapshot;
 
     private PlayerInput _playerInput;
     private GameConfig _gameConfig;
@@ -25,7 +24,6 @@ public class GameManager : MonoBehaviour
         _playerInput = new PlayerInput();
         GameState.Initialize(_gameConfig);
         LastTickSnapshot = GameState.GetSnapshot();
-        CurrentTickSnapshot = LastTickSnapshot;
     }
 
     private void OnEnable()
@@ -47,10 +45,9 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         //Main game loop
+        UIManager.UpdateUI(LastTickSnapshot);
         float dt = Time.deltaTime;
         GameStateSnapshot nextSnapShot = GameState.UpdateToNextTick(LastTickSnapshot, dt, _gameConfig, _playerInput.PlayerFrog);
-        LastTickSnapshot = CurrentTickSnapshot;
-        CurrentTickSnapshot = nextSnapShot;
-        UIManager.UpdateUI(LastTickSnapshot);
+        LastTickSnapshot = nextSnapShot;
     }
 }

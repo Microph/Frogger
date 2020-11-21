@@ -51,10 +51,11 @@ public class FrogManager : MonoBehaviour
         }
         else if (FrogData.State == FrogState.InFinishLine)
         {
-            FrogAnimator.SetTrigger("GoInvisible");
+            FrogAnimator.SetBool("GoInvisible", true);
         }
         else
         {
+            FrogAnimator.SetBool("GoInvisible", false);
             FrogAnimator.SetBool("CollisionDie", false);
             FrogAnimator.SetBool("DrownDie", false);
         }
@@ -76,13 +77,11 @@ public class FrogManager : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        //Debug.Log("collide with tag: " + other.tag);
         FrogData.UpdateFrogDataTriggerEnter2D(other);
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        //Debug.Log("exit tag: " + other.tag);
         FrogData.UpdateFrogDataTriggerOnExit2D(other);
     }
 }

@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RowDataConfig
   ObstacleType: 10
   RowMovingDirection: 1
-  RowMovingSpeed: 3
+  RowMovingSpeed: 2
   MinGap: 2
   MaxGap: 4

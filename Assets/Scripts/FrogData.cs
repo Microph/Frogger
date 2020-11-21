@@ -75,17 +75,12 @@ public class FrogData : MovableEntityData
         switch (State)
         {
             case FrogState.Idle:
-                if(IsOnPlatform)
-                {
-                    CurrentPosition = MoveWithPlatform(CurrentPosition, gameConfig, _platformRowIndex, dt, lastTickSnapshot);
-                }
-
                 _currentMoveCoolDown -= _currentMoveCoolDown > 0 ? dt : 0;
                 if (inputFrogAction != PlayerFrogAction.None)
                 {
                     if (_currentMoveCoolDown > 0)
                     {
-                        //Debug.Log("MOVE COOLDOWN");
+                        //MOVE COOLDOWN
                         return;
                     }
                     
@@ -93,7 +88,7 @@ public class FrogData : MovableEntityData
                     { 
                         if (_currentSameMovePenaltyTime > 0)
                         {
-                            //Debug.Log("SAME MOVE PENALTY");
+                            //"SAME MOVE PENALTY"
                             _currentSameMovePenaltyTime -= _currentSameMovePenaltyTime > 0 ? dt : 0;
                             return;
                         }
@@ -109,8 +104,11 @@ public class FrogData : MovableEntityData
                     _currentMoveCoolDown = gameConfig.MOVE_COOLDOWN;
                     State = FrogState.Jumping;
                 }
-
-                if (IsDrown())
+                else if (IsOnPlatform)
+                {
+                    CurrentPosition = MoveWithPlatform(CurrentPosition, gameConfig, _platformRowIndex, dt, lastTickSnapshot);
+                }
+                else if (IsDrown())
                 {
                     State = FrogState.Die;
                 }

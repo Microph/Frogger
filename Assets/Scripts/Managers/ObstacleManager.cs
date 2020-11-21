@@ -83,10 +83,30 @@ public class ObstacleManager : MonoBehaviour
                 }
             }
 
-            foreach (Obstacle obstacleGameObject in rowData.ObstacleGameObjectList)
+            for (int j = rowData.ObstacleGameObjectList.Count - 1; j >= 0; j--)
             {
-                obstacleGameObject.UpdateTick(dt, _gameConfig);
+                Obstacle obs = rowData.ObstacleGameObjectList[j];
+                obs.UpdateTick(dt, _gameConfig, rowData);
+                if(ObstacleLeftScreen(rowData, obs))
+                {
+                    obs.OnLeftScreen();
+                    rowData.ObstacleGameObjectList.RemoveAt(j);
+                }
             }
+
+        }
+    }
+
+    private bool ObstacleLeftScreen(RowData rowData, Obstacle obs)
+    {
+        float tailX = GetTailPosX(rowData, obs);
+        if(rowData.RowMovingDirection == RowMovingDirection.Left)
+        {
+            return tailX <= -7.5f;
+        }
+        else
+        {
+            return tailX >= 7.5f;
         }
     }
 
@@ -107,8 +127,13 @@ public class ObstacleManager : MonoBehaviour
         }
 
         Obstacle lastObstacle = rowData.ObstacleGameObjectList[rowData.ObstacleGameObjectList.Count - 1];
-        MovableEntityData entityData = lastObstacle.MovableEntityData;
-        float x = entityData.CurrentPosition.x + ((int)rowData.RowMovingDirection * lastObstacle.ObstacleWidth);
-        return Mathf.Clamp(x, -7.5f, 7.5f);
+        return Mathf.Clamp(GetTailPosX(rowData, lastObstacle), -7.5f, 7.5f);
+    }
+
+    private float GetTailPosX(RowData rowData, Obstacle obstacle)
+    {
+        MovableEntityData entityData = obstacle.MovableEntityData;
+        float x = entityData.CurrentPosition.x + ((int)rowData.RowMovingDirection * obstacle.ObstacleWidth);
+        return x;
     }
 }

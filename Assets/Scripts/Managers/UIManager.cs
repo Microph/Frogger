@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         HighScoreValueText.text = PlayerPrefs.GetInt("HighScore", 0).ToString();
+        ToggleSuperHot.isOn = PlayerPrefs.GetInt("EnableSuperHotMode", 1) == 1 ? true : false;
     }
 
     public void UpdateUI(GameStateSnapshot currentTickSnapshot)
@@ -63,5 +64,11 @@ public class UIManager : MonoBehaviour
     public void ShowGameOver(bool val)
     {
         GameOverPanel.SetActive(val);
+    }
+
+    public void UpdateSuperHotModeValue()
+    {
+        int isEnabled = ToggleSuperHot.isOn ? 1 : 0;
+        PlayerPrefs.SetInt("EnableSuperHotMode", isEnabled);
     }
 }

@@ -17,6 +17,12 @@ public class Obstacle : MonoBehaviour
 
     public void Initialize(int rowIndex, Vector2 spawnPos, RowMovingDirection movingDirection, GameConfig gameConfig)
     {
+        _obstacleTransform = GetComponent<Transform>();
+        _childrenTransforms = _obstacleTransform.GetComponentsInChildren<Transform>();
+        _childrenSpriteRenderers = _obstacleTransform.GetComponentsInChildren<SpriteRenderer>();
+        _childrenAnimators = _obstacleTransform.GetComponentsInChildren<Animator>();
+        _childrenColliders = _obstacleTransform.GetComponentsInChildren<Collider2D>();
+
         if (MovableEntityData == null)
         {
             MovableEntityData = new MovableEntityData();
@@ -29,10 +35,15 @@ public class Obstacle : MonoBehaviour
         FlipChildrenSprites(MovableEntityData.FacingDirection);
     }
 
-    public virtual void UpdateTick(float dt, GameConfig gameConfig)
+    public void OnLeftScreen()
     {
-        Vector2 moveVector = new Vector2(dt * gameConfig.RowDataConfigs[RowIndex].GetRowMovingUnitPerSec(), 0);
-        if (gameConfig.RowDataConfigs[RowIndex].RowMovingDirection == RowMovingDirection.Right)
+        gameObject.SetActive(false);
+    }
+
+    public virtual void UpdateTick(float dt, GameConfig gameConfig, RowData rowData)
+    {
+        Vector2 moveVector = new Vector2(dt * rowData.RowMovingUnitPerSec, 0);
+        if (rowData.RowMovingDirection == RowMovingDirection.Right)
         {
             MovableEntityData.CurrentPosition += moveVector;
         }
@@ -42,15 +53,6 @@ public class Obstacle : MonoBehaviour
         }
 
         _obstacleTransform.position = MovableEntityData.CurrentPosition;
-    }
-
-    private void Awake()
-    {
-        _obstacleTransform = GetComponent<Transform>();
-        _childrenTransforms = _obstacleTransform.GetComponentsInChildren<Transform>();
-        _childrenSpriteRenderers = _obstacleTransform.GetComponentsInChildren<SpriteRenderer>();
-        _childrenAnimators = _obstacleTransform.GetComponentsInChildren<Animator>();
-        _childrenColliders = _obstacleTransform.GetComponentsInChildren<Collider2D>();
     }
 
     private void FlipChildrenSprites(FacingDirection facingDirection)
