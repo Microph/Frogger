@@ -1,4 +1,5 @@
 # Frogger
 
 Rough Class Diagram
-![Class Diagram](Frogger Class Diagram.jpg)
+
+![image](Frogger%20Class%20Diagram.jpg)
